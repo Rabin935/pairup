@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pairup/screens/email_verification_screen.dart';
 
 class GetStartScreen extends StatefulWidget {
   const GetStartScreen({super.key});
@@ -47,7 +48,14 @@ class _GetStartScreenState extends State<GetStartScreen> {
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EmailVerificationScreen(),
+                      ),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 18),
@@ -59,7 +67,7 @@ class _GetStartScreenState extends State<GetStartScreen> {
                   child: const Text(
                     "Get Started",
                     style: TextStyle(
-                      fontSize: 25,
+                      fontSize: 22,
                       fontWeight: FontWeight.bold,
                       color: Color.fromARGB(255, 0, 0, 0),
                     ),
