@@ -60,7 +60,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   // Function to navigate to the SignUpPage
   void _navigateToSignUp() {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => const SignUpScreen()),
+      MaterialPageRoute(builder: (context) => const SignupScreen()),
     );
   }
 
