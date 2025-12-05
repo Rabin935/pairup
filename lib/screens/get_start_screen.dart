@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pairup/screens/Signup_screen.dart';
-import 'package:pairup/screens/home_screen.dart';
+
+import 'package:pairup/screens/onboarding_screen.dart';
 
 class GetStartScreen extends StatefulWidget {
   const GetStartScreen({super.key});
@@ -29,7 +29,7 @@ class _GetStartScreenState extends State<GetStartScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.people_alt, color: Colors.white, size: 60),
+                Image.asset('assets/images/pairup.png'),
 
                 const SizedBox(width: 15),
                 const Text(
@@ -52,7 +52,10 @@ class _GetStartScreenState extends State<GetStartScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SignUpScreen()),
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            OnboardingScreen(onComplete: () {}),
+                      ),
                     );
                   },
                   style: ElevatedButton.styleFrom(
