@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pairup/screens/home_screen.dart';
 import 'package:pairup/screens/get_start_screen.dart';
+import 'package:pairup/screens/login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -33,7 +34,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Determine the screen width for responsive padding
     final screenWidth = MediaQuery.of(context).size.width;
     final horizontalPadding = screenWidth > 600 ? screenWidth * 0.2 : 32.0;
 
@@ -43,7 +43,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            // Navigator.pop(context) or similar action
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => GetStartScreen()),
@@ -92,18 +91,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
               const SizedBox(height: 48.0),
 
               // 4. Email Input Field
-              TextFormField(
+              TextField(
                 keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  hintText: 'Enter your email',
-                  contentPadding: EdgeInsets.all(16.0),
+                decoration: InputDecoration(
+                  labelText: "Enter your email",
+                  hintText: "example@email.com",
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                    borderSide: BorderSide(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10.0),
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                    borderSide: BorderSide(color: Colors.grey),
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 18.0,
+                    horizontal: 16.0,
                   ),
                 ),
               ),
@@ -111,20 +109,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
               const SizedBox(height: 16.0),
 
               // 5. Password Input Field
-              TextFormField(
+              TextField(
                 obscureText: !_isPasswordVisible,
                 decoration: InputDecoration(
-                  hintText: 'Password',
-                  contentPadding: const EdgeInsets.all(16.0),
-                  border: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                    borderSide: BorderSide(color: Colors.grey),
+                  labelText: "Password",
+                  hintText: "********",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
                   ),
-                  enabledBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                    borderSide: BorderSide(color: Colors.grey),
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 18.0,
+                    horizontal: 16.0,
                   ),
-                  // Eye icon for password visibility toggle
                   suffixIcon: IconButton(
                     icon: Icon(
                       _isPasswordVisible
@@ -190,7 +186,36 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
 
-              const SizedBox(height: 32.0),
+              const SizedBox(height: 10.0),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Already have an account?"),
+                  Align(
+                    child: TextButton(
+                      onPressed: () {
+                        // Handle navigation to forgot password screen
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        'Login',
+                        style: TextStyle(
+                          color: Colors.blue, // A clear blue link color
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 200.0),
 
               // 8. Legal Text Footer
               Row(

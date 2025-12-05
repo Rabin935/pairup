@@ -132,7 +132,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
       occupation: 'Professional model',
       location: 'Kathmandu',
       imageUrl:
-          'https://i.pinimg.com/474x/70/cf/8c/70cf8c0b788ba7625ac17e68217bbba1.jpg',
+          'https://res.cloudinary.com/dtndr0wru/image/upload/v1764936474/curly_bra96e.jpg',
     ),
   ];
 
