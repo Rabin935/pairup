@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pairup/screens/email_verification_screen.dart';
+import 'package:pairup/screens/Signup_screen.dart';
+import 'package:pairup/screens/home_screen.dart';
 
 class GetStartScreen extends StatefulWidget {
   const GetStartScreen({super.key});
@@ -51,9 +52,7 @@ class _GetStartScreenState extends State<GetStartScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => EmailVerificationScreen(),
-                      ),
+                      MaterialPageRoute(builder: (context) => SignUpScreen()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
