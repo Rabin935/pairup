@@ -50,7 +50,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // We keep the selected index state, but for now, we will lock it to 0
   int _selectedIndex = 0;
 
   // We only keep the DiscoverScreen in the list for now
@@ -74,7 +73,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // We use the first (and only) screen in the list
       body: _widgetOptions[0],
 
       bottomNavigationBar: BottomNavigationBar(
