@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pairup/widgets/profileitemmenu_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -53,7 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         const SizedBox(width: 8),
                         Icon(
-                          Icons.check_circle,
+                          Icons.verified,
                           color: Colors.blue.shade600,
                           size: 20,
                         ),
@@ -93,6 +94,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             const SizedBox(height: 30),
+
+            // --- Menu Items ---
+            ProfileMenuItem(
+              icon: Icons.block_flipped,
+              title: "Blocked",
+              onTap: () {},
+            ),
+            ProfileMenuItem(
+              icon: Icons.mail_outline,
+              title: "Email Address",
+              trailing: "l******5@gmail.com",
+              onTap: () {},
+            ),
+            ProfileMenuItem(
+              icon: Icons.qr_code_scanner,
+              title: "Redeem code",
+              onTap: () {},
+            ),
+            ProfileMenuItem(
+              icon: Icons.verified_outlined,
+              title: "Upgrade to Premium",
+              onTap: () {},
+            ),
+            ProfileMenuItem(
+              icon: Icons.settings_outlined,
+              title: "Settings",
+              onTap: () {},
+            ),
           ],
         ),
       ),
