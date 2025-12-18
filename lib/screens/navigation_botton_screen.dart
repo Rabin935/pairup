@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pairup/screens/bottom_screens/chat_screen.dart';
 import 'package:pairup/screens/bottom_screens/home_screen.dart';
 import 'package:pairup/screens/bottom_screens/like_screen.dart';
 import 'package:pairup/screens/bottom_screens/profile_screen.dart';
 
-class NavigationBottonScreen extends StatefulWidget {
+class NavigationBottonScreen extends ConsumerStatefulWidget {
   const NavigationBottonScreen({super.key});
 
   @override
-  State<NavigationBottonScreen> createState() => _NavigationBottonScreenState();
+  ConsumerState<NavigationBottonScreen> createState() =>
+      _NavigationBottonScreenState();
 }
 
-class _NavigationBottonScreenState extends State<NavigationBottonScreen> {
+class _NavigationBottonScreenState
+    extends ConsumerState<NavigationBottonScreen> {
   int _selectedIndex = 0;
 
   static const List<Widget> _btmScreen = [
