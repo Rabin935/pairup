@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:pairup/screens/navigation_botton_screen.dart';
+
 import 'package:pairup/screens/splash_screen.dart';
 
 class App extends StatelessWidget {
@@ -7,6 +9,6 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: SplashScreen());
+    return const MaterialApp(home: NavigationBottonScreen());
   }
 }

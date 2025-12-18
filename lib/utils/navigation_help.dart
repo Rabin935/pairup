@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pairup/screens/home_screen.dart'; 
+import 'package:pairup/screens/bottom_screens/home_screen.dart';
+
 // Import other common destinations like LoginScreen if needed
 
 void navigateToHomeReplacement(BuildContext context) {
