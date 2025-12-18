@@ -1,25 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:pairup/models/profile_model.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-// --- Profile Data Model ---
-class Profile {
-  final String name;
-  final int age;
-  final String occupation;
-  final String location;
-  final String imageUrl;
 
-  Profile({
-    required this.name,
-    required this.age,
-    required this.occupation,
-    required this.location,
-    required this.imageUrl,
-  });
-}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -352,7 +338,7 @@ class InteractionButtons extends StatelessWidget {
           elevation: 6,
           child: Transform.scale(
             scale: 1.5,
-            child: const Icon(Icons.favorite, color: Colors.white, size: 32),
+            child: const Icon(Icons.favorite, color: Colors.white, size: 23),
           ),
         ),
         // Super Like Button (Star)

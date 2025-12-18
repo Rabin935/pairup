@@ -166,22 +166,6 @@ class _SignupScreenState extends State<SignupScreen> {
                 const SizedBox(height: 8.0),
 
                 // Forgot Password Button
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      // Handle navigation to forgot password screen
-                    },
-                    child: const Text(
-                      'Forgot password?',
-                      style: TextStyle(
-                        color: primaryPurple,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-
                 const SizedBox(height: 24.0),
 
                 // 5. Sign Up Button (Fixed: linked to logic, corrected text and color)

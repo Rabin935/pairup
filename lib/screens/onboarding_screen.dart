@@ -1,27 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:pairup/models/onboarding_model.dart';
 import 'package:pairup/screens/Signup_screen.dart';
 
 // --- Data Model for Onboarding Pages ---
-class OnboardingPageModel {
-  final String imageUrl; // In a real app, this would be your asset path
-  final String title;
-  final String description;
 
-  OnboardingPageModel({
-    required this.imageUrl,
-    required this.title,
-    required this.description,
-  });
-}
 
 // --- List of Onboarding Pages (Matching your image) ---
 final List<OnboardingPageModel> onboardingPages = [
   OnboardingPageModel(
     imageUrl:
         'assets/images/onboardimage1.jpg', // Replace with your actual asset path
-    title: 'Chat with strangers and make them your partners.',
+    title: 'Chat with strangers and make them your partners.', 
     description:
         'Chat with strangers to know each other better and have a nice compatibility.',
+        
   ),
   OnboardingPageModel(
     imageUrl:
