@@ -24,26 +24,28 @@ class _NavigationBottonScreenState extends State<NavigationBottonScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Bottom Navigation screen'),
-        centerTitle: true,
-      ),
       body: BtmScreen[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_bag),
-            label: 'Cart',
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
           ),
 
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite_border),
+            label: 'Like',
+          ),
 
           BottomNavigationBarItem(
-            icon: Icon(Icons.album_outlined),
-            label: 'About',
+            icon: Icon(Icons.chat_bubble_outline),
+            label: 'Profile',
+          ),
+
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_2_outlined),
+            label: 'Profile',
           ),
         ],
         backgroundColor: const Color.fromARGB(255, 252, 255, 255),
