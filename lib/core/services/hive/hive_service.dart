@@ -74,4 +74,6 @@ class HiveService {
   bool doesEmailExist(String email) {
     return _userBox.values.any((user) => user.email == email);
   }
+
+  Future<void> createUser(UserHiveModel user) async {}
 }
