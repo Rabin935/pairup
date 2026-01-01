@@ -32,7 +32,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _navigateToRegistration() {
     // Implement navigation to your registration screen
-    print('Navigating to Join now screen...');
   }
 
   static const Color primaryPurple = Color(0xFF8A2BE2);
@@ -147,9 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () {
-                    print('Navigating to Forgot Password screen...');
-                  },
+                  onPressed: () {},
                   child: const Text(
                     "Forget password?",
                     style: TextStyle(

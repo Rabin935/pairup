@@ -4,34 +4,33 @@ import 'package:pairup/screens/login_screen.dart';
 import 'package:pairup/utils/navigation_help.dart'; // Assuming these paths are correct
 import 'package:pairup/utils/snackbar_helper.dart'; // Assuming these paths are correct
 
-// 1. Define the main StatefulWidget (no need for a second one)
+
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
   @override
-  // Correctly link the widget to its state class
+ 
   State<SignupScreen> createState() => _SignupScreenState();
 }
 
-// 2. Define the single State class containing all logic and UI
+
 class _SignupScreenState extends State<SignupScreen> {
-  // State to manage password visibility
+  
   bool _isPasswordVisible = false;
 
-  // GlobalKey for the Form widget to enable validation
+
   final _formkey = GlobalKey<FormState>();
 
   // Define the consistent color
   static const Color primaryPurple = Color(0xFF8A2BE2);
 
-  // 3. Define the signup handler logic inside the UI's State class
+ 
   void _handleSignup() {
     if (_formkey.currentState!.validate()) {
-      // Validation Successful: Call the reusable navigation helper
-      // This context is available because the method is in the State class
+      
       navigateToHomeReplacement(context);
     } else {
-      // Validation Failed: Show error SnackBar. Corrected message for 'Sign up'
+      
       showCustomErrorSnackBar(
         context,
         'Sign up failed. Please correct the highlighted errors.',
@@ -41,7 +40,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // REMOVED: The erroneous MaterialApp wrapper from the previous code block.
+    
 
     final screenWidth = MediaQuery.of(context).size.width;
     final horizontalPadding = screenWidth > 600 ? screenWidth * 0.2 : 32.0;
