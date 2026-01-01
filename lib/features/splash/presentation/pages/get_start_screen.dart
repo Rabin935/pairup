@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pairup/screens/onboarding_screen.dart';
+import 'package:pairup/features/splash/presentation/pages/onboarding_screen.dart';
 // Assuming OnboardingScreen is a StatelessWidget or StatefulWidget without required parameters
 
 class GetStartScreen extends StatelessWidget {

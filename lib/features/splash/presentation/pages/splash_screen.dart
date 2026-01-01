@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pairup/screens/get_start_screen.dart';
+import 'package:pairup/features/splash/presentation/pages/get_start_screen.dart';
 // Note: Ensure the path above is correct for your project structure
 
 class SplashScreen extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pairup/models/onboarding_model.dart';
-import 'package:pairup/screens/Signup_screen.dart';
+import 'package:pairup/features/splash/presentation/models/onboarding_model.dart';
+import 'package:pairup/features/splash/presentation/pages/Signup_screen.dart';
 
 // --- Data Model for Onboarding Pages ---
 

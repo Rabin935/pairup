@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pairup/widgets/homepage_widgets/Action_button.dart';
-import 'package:pairup/widgets/homepage_widgets/discoverCard.dart';
-import 'package:pairup/widgets/homepage_widgets/discover_app_bar.dart';
+import 'package:pairup/core/widgets/homepage_widgets/Action_button.dart';
+import 'package:pairup/core/widgets/homepage_widgets/discoverCard.dart';
+import 'package:pairup/core/widgets/homepage_widgets/discover_app_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

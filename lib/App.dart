@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:pairup/screens/navigation_botton_screen.dart';
-import 'package:pairup/screens/splash_screen.dart';
+import 'package:pairup/features/splash/presentation/pages/navigation_botton_screen.dart';
+import 'package:pairup/features/splash/presentation/pages/splash_screen.dart';
 
 class App extends StatelessWidget {
   const App({super.key});

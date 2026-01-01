@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pairup/screens/get_start_screen.dart';
-import 'package:pairup/screens/login_screen.dart';
-import 'package:pairup/utils/navigation_help.dart'; // Assuming these paths are correct
-import 'package:pairup/utils/snackbar_helper.dart'; // Assuming these paths are correct
+import 'package:pairup/features/splash/presentation/pages/get_start_screen.dart';
+import 'package:pairup/features/splash/presentation/pages/login_screen.dart';
+import 'package:pairup/core/utils/navigation_help.dart'; // Assuming these paths are correct
+import 'package:pairup/core/utils/snackbar_helper.dart'; // Assuming these paths are correct
 
 
 class SignupScreen extends StatefulWidget {

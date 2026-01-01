@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pairup/widgets/profileitemmenu_widget.dart';
+import 'package:pairup/core/widgets/profileitemmenu_widget.dart';
 
 final accNameProvider = Provider<String>((ref) {
   return "Rabin";

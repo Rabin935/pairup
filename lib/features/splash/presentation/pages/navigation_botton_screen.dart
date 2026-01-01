@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pairup/screens/bottom_screens/chat_screen.dart';
-import 'package:pairup/screens/bottom_screens/home_screen.dart';
-import 'package:pairup/screens/bottom_screens/like_screen.dart';
-import 'package:pairup/screens/bottom_screens/profile_screen.dart';
+import 'package:pairup/features/splash/presentation/pages/bottom_screens/chat_screen.dart';
+import 'package:pairup/features/splash/presentation/pages/bottom_screens/home_screen.dart';
+import 'package:pairup/features/splash/presentation/pages/bottom_screens/like_screen.dart';
+import 'package:pairup/features/splash/presentation/pages/bottom_screens/profile_screen.dart';
 
 class NavigationBottonScreen extends ConsumerStatefulWidget {
   const NavigationBottonScreen({super.key});
@@ -18,10 +18,10 @@ class _NavigationBottonScreenState
   int _selectedIndex = 0;
 
   static const List<Widget> _btmScreen = [
-    const HomeScreen(),
-    const LikeScreen(),
-    const ChatScreen(),
-    const ProfileScreen(),
+    HomeScreen(),
+    LikeScreen(),
+    ChatScreen(),
+    ProfileScreen(),
   ];
 
   @override

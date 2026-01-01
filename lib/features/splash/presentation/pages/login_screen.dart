@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pairup/utils/navigation_help.dart';
-import 'package:pairup/utils/snackbar_helper.dart';
+import 'package:pairup/core/utils/navigation_help.dart';
+import 'package:pairup/core/utils/snackbar_helper.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
