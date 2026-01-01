@@ -1,5 +1,5 @@
 class UserEntity {
-  final String id;
+  final String userId;
   final String name;
   final int age;
   final String gender;
@@ -9,7 +9,7 @@ class UserEntity {
   final String location;
 
   const UserEntity({
-    required this.id,
+    required this.userId,
     required this.name,
     required this.age,
     required this.gender,
