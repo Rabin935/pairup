@@ -3,7 +3,6 @@ import 'package:pairup/core/constants/hive_table_constant.dart';
 import 'package:pairup/features/user/domain/entities/user_entities.dart';
 import 'package:uuid/uuid.dart';
 
-
 part 'user_hive_model.g.dart';
 
 @HiveType(typeId: HiveTableConstant.userTypeId)
@@ -45,9 +44,9 @@ class UserHiveModel extends HiveObject {
     List<String>? interests,
     List<String>? photos,
     this.location = '',
-  })  : userId = userId ?? const Uuid().v4(),
-        interests = interests ?? [],
-        photos = photos ?? [];
+  }) : userId = userId ?? const Uuid().v4(),
+       interests = interests ?? [],
+       photos = photos ?? [];
 
   // Convert Hive model to entity
   UserEntity toEntity() {
@@ -77,5 +76,9 @@ class UserHiveModel extends HiveObject {
       photos: entity.photos,
       location: entity.location,
     );
+  }
+
+  static List<UserEntity> toEntityList(List<UserHiveModel> models) {
+    return models.map((model) => model.toEntity()).toList();
   }
 }

@@ -46,25 +46,56 @@ class UserRepository implements IUserRepository {
 
   @override
   Future<Either<Failure, List<UserEntity>>> getAllUser() async {
-    // TODO: implement getAllUser
-    throw UnimplementedError();
+    try {
+      final models = await _datasource.getAllUser();
+      final entities = UserHiveModel.toEntityList(models);
+      return Right(entities);
+    } catch (e) {
+      return Left(LocalDatabaseFailure(message: e.toString()));
+    }
   }
 
   @override
   Future<Either<Failure, UserEntity>> getUserbyId(String userId) async {
-    // TODO: implement getUserbyId
-    throw UnimplementedError();
+    try {
+      final model = await _datasource.getUserbyId(userId);
+      if (model != null) {
+        final entity = model.toEntity();
+        return Right(entity);
+      }
+      return Left(LocalDatabaseFailure(message: 'User not found'));
+    } catch (e) {
+      return Left(LocalDatabaseFailure(message: e.toString()));
+    }
   }
 
   @override
   Future<Either<Failure, bool>> saveUser(UserEntity user) async {
-    // TODO: implement saveUser
-    throw UnimplementedError();
+    try {
+      final usermodel = UserHiveModel.fromEntity(user);
+      final result = await _datasource.saveUser(usermodel);
+      if (result) {
+        return const Right(true);
+      }
+      return const Left(LocalDatabaseFailure(message: "Failed to create user"));
+    } catch (e) {
+      return Left(LocalDatabaseFailure(message: e.toString()));
+    }
   }
 
   @override
   Future<Either<Failure, bool>> updateUser(UserEntity user) async {
-    // TODO: implement updateBatch
-    throw UnimplementedError();
+    try {
+      final userModel = UserHiveModel.fromEntity(user);
+      final result = await _datasource.updateUser(userModel);
+      if (result) {
+        return const Right(true);
+      }
+      return const Left(
+        LocalDatabaseFailure(message: "Failed to update user's detail"),
+      );
+    } catch (e) {
+      return Left(LocalDatabaseFailure(message: e.toString()));
+    }
   }
 }
