@@ -6,7 +6,6 @@ import 'package:pairup/core/usecases/app_usecase.dart';
 import 'package:pairup/features/user/data/repositories/user_repository.dart';
 import 'package:pairup/features/user/domain/entities/user_entities.dart';
 import 'package:pairup/features/user/domain/repositories/user_repository.dart';
-import 'package:pairup/features/user/domain/usecases/get_all_user_usecase.dart';
 
 class GetUserByIdUsecaseParams extends Equatable {
   final String userId;
@@ -17,9 +16,9 @@ class GetUserByIdUsecaseParams extends Equatable {
   List<Object?> get props => [userId];
 }
 
-final GetUserByIdUsecaseProvider = Provider<GetAllUserUsecase>((ref) {
+final getUserByIdUsecaseProvider = Provider<GetUserByIdUsecase>((ref) {
   final userRepository = ref.read(userRepositoryProvider);
-  return GetAllUserUsecase(userRepository: userRepository);
+  return GetUserByIdUsecase(userRepository: userRepository);
 });
 
 class GetUserByIdUsecase
