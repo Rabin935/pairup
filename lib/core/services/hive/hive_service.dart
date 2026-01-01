@@ -1,10 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
+import 'package:pairup/features/user/domain/usecases/get_user_by_id_usecase.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../constants/hive_table_constant.dart';
 import '../../../features/user/data/models/user_hive_model.dart';
-import '../../../features/auth/data/models/auth_hive_models.dart';
+import '../../../features/auth/data/models/auth_hive_model.dart';
 
 final hiveServiceProvider = Provider<HiveService>((ref) {
   return HiveService();
@@ -38,23 +39,28 @@ class HiveService {
 
   // ================= USER CRUD =================
 
-  Box<AuthHiveModel> get _userBox =>
-      Hive.box<AuthHiveModel>(HiveTableConstant.userTable);
+  Box<UserHiveModel> get _userBox =>
+      Hive.box<UserHiveModel>(HiveTableConstant.userTable);
 
-  Future<AuthHiveModel> saveUser(AuthHiveModel user) async {
+  Future<UserHiveModel> createUser(UserHiveModel user) async {
     await _userBox.put(user.userId, user);
     return user;
   }
 
-  AuthHiveModel? getUserById(String userId) {
+  Future<UserHiveModel> saveUser(UserHiveModel user) async {
+    await _userBox.put(user.userId, user);
+    return user;
+  }
+
+  UserHiveModel? getUserById(String userId) {
     return _userBox.get(userId);
   }
 
-  List<AuthHiveModel> getAllUsers() {
+  List<UserHiveModel> getAllUsers() {
     return _userBox.values.toList();
   }
 
-  Future<bool> updateUser(AuthHiveModel user) async {
+  Future<bool> updateUser(UserHiveModel user) async {
     if (_userBox.containsKey(user.userId)) {
       await _userBox.put(user.userId, user);
       return true;
@@ -101,6 +107,15 @@ class HiveService {
   AuthHiveModel? getUserByEmail(String email) {
     try {
       return _authBox.values.firstWhere((user) => user.email == email);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  // userID
+  AuthHiveModel? getAuthUserById(String userId) {
+    try {
+      return _authBox.values.firstWhere((user) => user.userId == userId);
     } catch (_) {
       return null;
     }

@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pairup/core/services/hive/hive_service.dart';
 import 'package:pairup/features/auth/data/datasource/auth_datasource.dart';
-import 'package:pairup/features/auth/data/models/auth_hive_models.dart';
+import 'package:pairup/features/auth/data/models/auth_hive_model.dart';
 
 final authLocalDatasourceProvider = Provider<AuthLocalDatasource>((ref) {
   final hiveService = ref.watch(hiveServiceProvider);
@@ -45,9 +45,9 @@ class AuthLocalDatasource implements IAuthDataSource {
   }
 
   @override
-  Future<AuthHiveModel?> getUserById(String userId) async {
+  Future<AuthHiveModel?> getAuthUserById(String userId) async {
     try {
-      return _hiveService.getUserById(userId);
+      return _hiveService.getAuthUserById(userId);
     } catch (e) {
       return null;
     }
@@ -58,10 +58,10 @@ class AuthLocalDatasource implements IAuthDataSource {
     return _hiveService.getUserByEmail(email);
   }
 
-  @override
-  Future<bool> updateUser(AuthHiveModel user) async {
-    return _hiveService.updateUser(user);
-  }
+  // @override
+  // Future<bool> updateUser(AuthHiveModel user) async {
+  //   return _hiveService.updateUser(user);
+  // }
 
   @override
   Future<bool> deleteUser(String userId) async {
