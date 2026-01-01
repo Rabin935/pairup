@@ -4,6 +4,7 @@ class AuthEntity extends Equatable {
   final String? userId;
   final String name;
   final String email;
+  final String password;
   final int age;
   final String gender;
   final String phoneNumber;
@@ -16,13 +17,14 @@ class AuthEntity extends Equatable {
     this.userId,
     required this.name,
     required this.email,
+    required this.password,
     required this.age,
     required this.gender,
     required this.phoneNumber,
     required this.bio,
     required this.interests,
     required this.photos,
-    required this.location,
+    required this.location, 
   });
 
   @override
@@ -30,11 +32,14 @@ class AuthEntity extends Equatable {
     userId,
     name,
     email,
+    password,
+    
     age,
     gender,
     bio,
     interests,
     photos,
     location,
+    phoneNumber,
   ];
 }

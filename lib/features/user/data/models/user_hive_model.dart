@@ -8,7 +8,7 @@ part 'user_hive_model.g.dart';
 @HiveType(typeId: HiveTableConstant.userTypeId)
 class UserHiveModel extends HiveObject {
   @HiveField(0)
-  late String userId;
+  String userId;
 
   @HiveField(1)
   String name;
@@ -17,27 +17,35 @@ class UserHiveModel extends HiveObject {
   String email;
 
   @HiveField(3)
-  int age;
+  String password;
 
   @HiveField(4)
-  String gender;
+  String phoneNumber;
 
   @HiveField(5)
-  String bio;
+  int age;
 
   @HiveField(6)
-  List<String> interests;
+  String gender;
 
   @HiveField(7)
-  List<String> photos;
+  String bio;
 
   @HiveField(8)
+  List<String> interests;
+
+  @HiveField(9)
+  List<String> photos;
+
+  @HiveField(10)
   String location;
 
   UserHiveModel({
     String? userId,
     required this.name,
     required this.email,
+    required this.password,
+    required this.phoneNumber,
     required this.age,
     required this.gender,
     this.bio = '',
@@ -75,6 +83,8 @@ class UserHiveModel extends HiveObject {
       interests: entity.interests,
       photos: entity.photos,
       location: entity.location,
+      password: '',
+      phoneNumber: '',
     );
   }
 

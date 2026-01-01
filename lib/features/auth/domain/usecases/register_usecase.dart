@@ -53,6 +53,7 @@ class RegisterUsecase
     final authEntity = AuthEntity(
       name: params.name,
       email: params.email,
+      password: '',
       phoneNumber: params.phoneNumber,
       gender: params.gender,
       age: 0,

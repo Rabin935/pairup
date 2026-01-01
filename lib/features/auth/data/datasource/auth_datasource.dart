@@ -1,5 +1,3 @@
-
-
 import 'package:pairup/features/auth/data/models/auth_hive_models.dart';
 
 abstract interface class IAuthDataSource {
@@ -9,8 +7,8 @@ abstract interface class IAuthDataSource {
   Future<bool> logout();
   Future<bool> doesEmailExist(String email);
 
-  Future<AuthHiveModel?> getUserById(String authId);
+  Future<AuthHiveModel?> getUserById(String userId);
   Future<AuthHiveModel?> getUserByEmail(String email);
   Future<bool> updateUser(AuthHiveModel user);
-  Future<bool> deleteUser(String authId);
+  Future<bool> deleteUser(String userId);
 }

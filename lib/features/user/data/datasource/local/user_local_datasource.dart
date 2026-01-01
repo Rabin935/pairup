@@ -16,7 +16,7 @@ class UserLocalDatasource implements IUserDatasource {
   @override
   Future<bool> createUser(UserHiveModel user) async {
     try {
-      await _hiveService.createUser(user);
+      await _hiveService.put(user.userId, user);
       return true;
     } catch (e) {
       return false;

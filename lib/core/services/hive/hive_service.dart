@@ -1,9 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
-import 'package:pairup/core/constants/hive_table_constant.dart';
-import 'package:pairup/features/user/data/models/user_hive_model.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../constants/hive_table_constant.dart';
+import '../../../features/user/data/models/user_hive_model.dart';
+import '../../../features/auth/data/models/auth_hive_models.dart';
 
 final hiveServiceProvider = Provider<HiveService>((ref) {
   return HiveService();
@@ -28,7 +29,7 @@ class HiveService {
   }
 
   Future<void> _openBoxes() async {
-    await Hive.openBox<UserHiveModel>(HiveTableConstant.userTable);
+    await Hive.openBox<AuthHiveModel>(HiveTableConstant.userTable);
   }
 
   Future<void> close() async {
@@ -37,27 +38,23 @@ class HiveService {
 
   // ================= USER CRUD =================
 
-  Box<UserHiveModel> get _userBox =>
-      Hive.box<UserHiveModel>(HiveTableConstant.userTable);
+  Box<AuthHiveModel> get _userBox =>
+      Hive.box<AuthHiveModel>(HiveTableConstant.userTable);
 
-  /// Save user
-  Future<UserHiveModel> saveUser(UserHiveModel user) async {
+  Future<AuthHiveModel> saveUser(AuthHiveModel user) async {
     await _userBox.put(user.userId, user);
     return user;
   }
 
-  /// Get user by ID
-  UserHiveModel? getUserById(String userId) {
+  AuthHiveModel? getUserById(String userId) {
     return _userBox.get(userId);
   }
 
-  /// Get all users
-  List<UserHiveModel> getAllUsers() {
+  List<AuthHiveModel> getAllUsers() {
     return _userBox.values.toList();
   }
 
-  /// Update user
-  Future<bool> updateUser(UserHiveModel user) async {
+  Future<bool> updateUser(AuthHiveModel user) async {
     if (_userBox.containsKey(user.userId)) {
       await _userBox.put(user.userId, user);
       return true;
@@ -65,15 +62,68 @@ class HiveService {
     return false;
   }
 
-  /// Delete user
   Future<void> deleteUser(String userId) async {
     await _userBox.delete(userId);
   }
 
-  /// Check if email exists (for signup)
   bool doesEmailExist(String email) {
     return _userBox.values.any((user) => user.email == email);
   }
 
-  Future<void> createUser(UserHiveModel user) async {}
+  // ================= AUTH CRUD =================
+
+  Box<AuthHiveModel> get _authBox =>
+      Hive.box<AuthHiveModel>(HiveTableConstant.userTable);
+
+  /// Register (Signup)
+  Future<AuthHiveModel> register(AuthHiveModel user) async {
+    await _authBox.put(user.userId, user);
+    return user;
+  }
+
+  /// Login
+  AuthHiveModel? login(String email, String password) {
+    try {
+      return _authBox.values.firstWhere(
+        (user) => user.email == email && user.password == password,
+      );
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Get current user by ID
+  AuthHiveModel? getCurrentUser(String authId) {
+    return _authBox.get(authId);
+  }
+
+  /// Get user by email
+  AuthHiveModel? getUserByEmail(String email) {
+    try {
+      return _authBox.values.firstWhere((user) => user.email == email);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Update auth user
+  Future<bool> updateAuthUser(AuthHiveModel user) async {
+    if (_authBox.containsKey(user.userId)) {
+      await _authBox.put(user.userId, user);
+      return true;
+    }
+    return false;
+  }
+
+  /// Delete auth user
+  Future<void> deleteAuthUser(String authId) async {
+    await _authBox.delete(authId);
+  }
+
+  /// Logout (local only)
+  Future<void> logout() async {
+    // optional: clear session or cached user
+  }
+
+  Future<void> put(String userId, AuthHiveModel user) async {}
 }

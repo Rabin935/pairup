@@ -1,8 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:pairup/core/constants/hive_table_constant.dart';
 import 'package:pairup/features/auth/domain/entities/auth_entity.dart';
-import 'package:pairup/features/user/domain/entities/user_entities.dart';
-
 import 'package:uuid/uuid.dart';
 
 part 'auth_hive_model.g.dart';
@@ -10,7 +8,7 @@ part 'auth_hive_model.g.dart';
 @HiveType(typeId: HiveTableConstant.userTypeId)
 class AuthHiveModel extends HiveObject {
   @HiveField(0)
-  late String userId;
+  String userId;
 
   @HiveField(1)
   String name;
@@ -19,50 +17,57 @@ class AuthHiveModel extends HiveObject {
   String email;
 
   @HiveField(3)
-  int age;
+  String password;
 
   @HiveField(4)
-  String gender;
+  String phoneNumber;
 
   @HiveField(5)
-  String bio;
+  int age;
 
   @HiveField(6)
-  List<String> interests;
+  String gender;
 
   @HiveField(7)
-  List<String> photos;
+  String bio;
 
   @HiveField(8)
+  String interests;
+
+  @HiveField(9)
+  String photos;
+
+  @HiveField(10)
   String location;
 
   AuthHiveModel({
     String? userId,
     required this.name,
     required this.email,
+    required this.password,
+    required this.phoneNumber,
     required this.age,
     required this.gender,
     this.bio = '',
-    List<String>? interests,
-    List<String>? photos,
+    required this.interests,
+    required this.photos,
     this.location = '',
-  }) : userId = userId ?? const Uuid().v4(),
-       interests = interests ?? [],
-       photos = photos ?? [];
+  }) : userId = userId ?? const Uuid().v4();
 
   // To Entity
-  AuthEntity toEntity({UserEntity? user}) {
+  AuthEntity toEntity({AuthEntity? user}) {
     return AuthEntity(
       userId: userId,
       name: name,
       email: email,
+      password: '',
       age: age,
       gender: gender,
       bio: bio,
-      interests: interests,
-      photos: photos,
-      location: location, 
+      location: location,
       phoneNumber: '',
+      interests: [],
+      photos: [],
     );
   }
 
@@ -72,15 +77,16 @@ class AuthHiveModel extends HiveObject {
       userId: entity.userId,
       name: entity.name,
       email: entity.email,
+      password: '',
       age: entity.age,
       gender: entity.gender,
       bio: entity.bio,
-      interests: entity.interests,
-      photos: entity.photos,
       location: entity.location,
+      phoneNumber: '',
+      interests: '',
+      photos: '',
     );
   }
-
   // To Entity List
   static List<AuthEntity> toEntityList(List<AuthHiveModel> models) {
     return models.map((model) => model.toEntity()).toList();
