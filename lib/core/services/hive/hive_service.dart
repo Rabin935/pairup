@@ -21,7 +21,7 @@ class HiveService {
   }
 
   void _registerAdapters() {
-    // Register UserHiveModelAdapter (typeId: 0)
+        // Register UserHiveModelAdapter (typeId: 0)
     if (!Hive.isAdapterRegistered(0)) {
       Hive.registerAdapter(UserHiveModelAdapter());
     }
@@ -85,19 +85,27 @@ class HiveService {
 
   /// Register (Signup)
   Future<AuthHiveModel> register(AuthHiveModel user) async {
-    print('HiveService.register: Storing user with email=${user.email}, password=${user.password}');
+    print(
+      'HiveService.register: Storing user with email=${user.email}, password=${user.password}',
+    );
     await _authBox.put(user.userId, user);
-    print('HiveService.register: User stored. Box contains ${_authBox.length} users');
+    print(
+      'HiveService.register: User stored. Box contains ${_authBox.length} users',
+    );
     // Verify storage
     final stored = _authBox.get(user.userId);
-    print('HiveService.register: Verification - stored user email=${stored?.email}, password=${stored?.password}');
+    print(
+      'HiveService.register: Verification - stored user email=${stored?.email}, password=${stored?.password}',
+    );
     return user;
   }
 
   /// Login
   AuthHiveModel? login(String email, String password) {
     try {
-      print('HiveService.login: Searching for email=$email, password=$password');
+      print(
+        'HiveService.login: Searching for email=$email, password=$password',
+      );
       print('HiveService.login: Box contains ${_authBox.length} users');
       _authBox.values.forEach((user) {
         print('  - User in DB: email=${user.email}, password=${user.password}');

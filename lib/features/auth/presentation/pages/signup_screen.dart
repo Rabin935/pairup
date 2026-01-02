@@ -31,7 +31,7 @@ class _SignupScreenState extends State<SignupScreen> {
   // Consistent Theme Color
   static const Color primaryPurple = Color(0xFF6C63FF);
 
-void _handleSignup() async {
+  void _handleSignup() async {
     if (!_agreedToTerms) {
       showCustomErrorSnackBar(
         context,
@@ -45,15 +45,17 @@ void _handleSignup() async {
       final email = _emailController.text.trim();
       final phone = _phoneController.text.trim();
       final password = _passController.text.trim();
-      
+
       if (name.isEmpty || email.isEmpty || phone.isEmpty || password.isEmpty) {
         showCustomErrorSnackBar(context, 'Please fill all fields');
         return;
       }
-      
+
       // DEBUG: Print data before registering
-      print('Signup Data: name=$name, email=$email, phone=$phone, password=$password, gender=$_selectedGender');
-      
+      print(
+        'Signup Data: name=$name, email=$email, phone=$phone, password=$password, gender=$_selectedGender',
+      );
+
       // TODO: Call register via provider
       // For now, use direct HiveService registration
       try {
@@ -70,10 +72,10 @@ void _handleSignup() async {
         );
         await hiveService.register(authModel);
         print('User registered successfully with email: $email');
-        
+
         if (!mounted) return;
-        showCustomErrorSnackBar(context, 'Account created successfully!');
-        
+        showCustomSuccessSnackBar(context, 'Account created successfully!');
+
         // Navigate to login after successful registration
         Future.delayed(const Duration(milliseconds: 500), () {
           Navigator.pushReplacement(

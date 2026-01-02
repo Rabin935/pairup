@@ -52,7 +52,9 @@ class RegisterUsecase
 
   @override
   Future<Either<Failure, bool>> call(RegisterUsecaseParams params) {
-    print('RegisterUsecase called with: name=${params.name}, email=${params.email}, password=${params.password}, phoneNumber=${params.phoneNumber}');
+    print(
+      'RegisterUsecase called with: name=${params.name}, email=${params.email}, password=${params.password}, phoneNumber=${params.phoneNumber}',
+    );
     final authEntity = AuthEntity(
       name: params.name,
       email: params.email,
