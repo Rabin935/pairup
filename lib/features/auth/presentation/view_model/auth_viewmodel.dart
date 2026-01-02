@@ -5,8 +5,6 @@ import 'package:pairup/features/auth/domain/usecases/register_usecase.dart';
 import 'package:pairup/features/auth/presentation/state/auth_state.dart';
 import 'package:pairup/features/auth/domain/usecases/login_usecase.dart';
 
-
-
 final authViewModelProvider = NotifierProvider<AuthViewModel, AuthState>(
   AuthViewModel.new,
 );
@@ -33,19 +31,19 @@ class AuthViewModel extends Notifier<AuthState> {
     required String password,
     String? phoneNumber,
     String? batchId,
+    required int age,
+    required String gender,
   }) async {
     state = state.copyWith(status: AuthStatus.loading);
 
-    await Future.delayed(Duration(seconds: 2));
-
     final result = await _registerUsecase(
       RegisterUsecaseParams(
-        name: '', 
-      email: '', 
-      age: 0, 
-      gender: '', 
-      phoneNumber: ''
-        
+        name: fullName,
+        email: email,
+        password: password,
+        age: age,
+        gender: gender,
+        phoneNumber: phoneNumber ?? '',
       ),
     );
 

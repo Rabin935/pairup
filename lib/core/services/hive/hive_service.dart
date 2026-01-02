@@ -1,11 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
-import 'package:pairup/features/user/domain/usecases/get_user_by_id_usecase.dart';
 import 'package:path_provider/path_provider.dart';
-
 import '../../constants/hive_table_constant.dart';
 import '../../../features/user/data/models/user_hive_model.dart';
-import '../../../features/auth/data/models/auth_hive_model.dart';
+import '../../../features/auth/data/datasource/models/auth_hive_model.dart';
 
 final hiveServiceProvider = Provider<HiveService>((ref) {
   return HiveService();
@@ -18,14 +16,18 @@ class HiveService {
     final directory = await getApplicationDocumentsDirectory();
     final path = '${directory.path}/${HiveTableConstant.dbName}';
     Hive.init(path);
-
     _registerAdapters();
     await _openBoxes();
   }
 
   void _registerAdapters() {
-    if (!Hive.isAdapterRegistered(HiveTableConstant.userTypeId)) {
+    // Register UserHiveModelAdapter (typeId: 0)
+    if (!Hive.isAdapterRegistered(0)) {
       Hive.registerAdapter(UserHiveModelAdapter());
+    }
+    // Register AuthHiveModelAdapter (typeId: 1)
+    if (!Hive.isAdapterRegistered(1)) {
+      Hive.registerAdapter(AuthHiveModelAdapter());
     }
   }
 
@@ -83,17 +85,30 @@ class HiveService {
 
   /// Register (Signup)
   Future<AuthHiveModel> register(AuthHiveModel user) async {
+    print('HiveService.register: Storing user with email=${user.email}, password=${user.password}');
     await _authBox.put(user.userId, user);
+    print('HiveService.register: User stored. Box contains ${_authBox.length} users');
+    // Verify storage
+    final stored = _authBox.get(user.userId);
+    print('HiveService.register: Verification - stored user email=${stored?.email}, password=${stored?.password}');
     return user;
   }
 
   /// Login
   AuthHiveModel? login(String email, String password) {
     try {
-      return _authBox.values.firstWhere(
+      print('HiveService.login: Searching for email=$email, password=$password');
+      print('HiveService.login: Box contains ${_authBox.length} users');
+      _authBox.values.forEach((user) {
+        print('  - User in DB: email=${user.email}, password=${user.password}');
+      });
+      final user = _authBox.values.firstWhere(
         (user) => user.email == email && user.password == password,
       );
-    } catch (_) {
+      print('HiveService.login: Found user with email=$email');
+      return user;
+    } catch (e) {
+      print('HiveService.login: No user found - $e');
       return null;
     }
   }

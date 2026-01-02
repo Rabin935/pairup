@@ -5,7 +5,7 @@ import 'package:uuid/uuid.dart';
 
 part 'auth_hive_model.g.dart';
 
-@HiveType(typeId: HiveTableConstant.userTypeId)
+@HiveType(typeId: 1)  // Changed from userTypeId (0) to 1 for auth
 class AuthHiveModel extends HiveObject {
   @HiveField(0)
   String userId;
@@ -60,14 +60,14 @@ class AuthHiveModel extends HiveObject {
       userId: userId,
       name: name,
       email: email,
-      password: '',
+      password: password,
       age: age,
       gender: gender,
       bio: bio,
       location: location,
-      phoneNumber: '',
-      interests: [],
-      photos: [],
+      phoneNumber: phoneNumber,
+      interests: interests.split(',').where((e) => e.isNotEmpty).toList(),
+      photos: photos.split(',').where((e) => e.isNotEmpty).toList(),
     );
   }
 
@@ -77,14 +77,14 @@ class AuthHiveModel extends HiveObject {
       userId: entity.userId,
       name: entity.name,
       email: entity.email,
-      password: '',
+      password: entity.password,
       age: entity.age,
       gender: entity.gender,
       bio: entity.bio,
       location: entity.location,
-      phoneNumber: '',
-      interests: '',
-      photos: '',
+      phoneNumber: entity.phoneNumber,
+      interests: entity.interests.join(','),
+      photos: entity.photos.join(','),
     );
   }
   // To Entity List
