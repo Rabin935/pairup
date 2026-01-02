@@ -12,12 +12,14 @@ class AuthLocalDatasource implements IAuthDataSource {
   final HiveService _hiveService;
 
   AuthLocalDatasource({required HiveService hiveService})
-      : _hiveService = hiveService;
+    : _hiveService = hiveService;
 
   @override
   Future<bool> register(AuthHiveModel user) async {
     try {
-      print('AuthLocalDatasource.register: email=${user.email}, password=${user.password}');
+      print(
+        'AuthLocalDatasource.register: email=${user.email}, password=${user.password}',
+      );
       await _hiveService.register(user);
       print('AuthLocalDatasource.register success');
       return true;

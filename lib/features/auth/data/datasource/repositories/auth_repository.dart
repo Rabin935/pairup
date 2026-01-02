@@ -7,7 +7,6 @@ import 'package:pairup/features/auth/data/datasource/models/auth_hive_model.dart
 import 'package:pairup/features/auth/domain/entities/auth_entity.dart';
 import 'package:pairup/features/auth/domain/repositories/auth_repository.dart';
 
-
 // Create provider
 final authRepositoryProvider = Provider<IAuthRepository>((ref) {
   final authDatasource = ref.read(authLocalDatasourceProvider);
@@ -23,7 +22,9 @@ class AuthRepository implements IAuthRepository {
   @override
   Future<Either<Failure, bool>> register(AuthEntity user) async {
     try {
-      print('AuthRepository.register: email=${user.email}, password=${user.password}');
+      print(
+        'AuthRepository.register: email=${user.email}, password=${user.password}',
+      );
       // Check if email already exists
       final existingUser = await _authDataSource.getUserByEmail(user.email);
       if (existingUser != null) {
@@ -33,7 +34,9 @@ class AuthRepository implements IAuthRepository {
       }
 
       final authModel = AuthHiveModel.fromEntity(user);
-      print('AuthRepository authModel: email=${authModel.email}, password=${authModel.password}');
+      print(
+        'AuthRepository authModel: email=${authModel.email}, password=${authModel.password}',
+      );
       final result = await _authDataSource.register(authModel);
 
       if (result) {
