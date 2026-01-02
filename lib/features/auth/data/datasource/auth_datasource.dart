@@ -1,4 +1,4 @@
-import 'package:pairup/features/auth/data/models/auth_hive_model.dart';
+import 'package:pairup/features/auth/data/datasource/models/auth_hive_model.dart';
 
 abstract interface class IAuthDataSource {
   Future<bool> register(AuthHiveModel user);

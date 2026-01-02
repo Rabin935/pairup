@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pairup/core/utils/navigation_help.dart';
 import 'package:pairup/core/utils/snackbar_helper.dart';
+import 'package:pairup/core/services/hive/hive_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,27 +12,34 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _isPasswordVisible = false;
-
   final _formkey = GlobalKey<FormState>();
 
-  // Controllers are needed for TextFormFields in a real app, though omitted here
-  // final TextEditingController _emailController = TextEditingController();
-  // final TextEditingController _passwordController = TextEditingController();
+  // ✅ Controllers (REQUIRED)
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   void _handleLogin() {
-    if (_formkey.currentState!.validate()) {
-      // Call the reusable navigation helper
-      navigateToHomeReplacement(context);
-    } else {
-      showCustomErrorSnackBar(
-        context,
-        'Login failed. Please correct the highlighted errors.',
-      );
+    if (!_formkey.currentState!.validate()) return;
+
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    // TODO: Use repository via Riverpod instead
+    // For now, use HiveService
+    final hiveService = HiveService();
+    final user = hiveService.login(email, password);
+
+    if (user == null) {
+      showCustomErrorSnackBar(context, 'Invalid email or password');
+      return;
     }
+
+    // ✅ Login success
+    navigateToHomeReplacement(context);
   }
 
   void _navigateToRegistration() {
-    // Implement navigation to your registration screen
+    Navigator.pushNamed(context, '/signup'); // or your route
   }
 
   static const Color primaryPurple = Color(0xFF8A2BE2);
@@ -40,59 +48,40 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        toolbarHeight: 0,
-      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 40.0),
         child: Form(
-          // The Form wrapper is crucial for validation
           key: _formkey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              // 1. Title
+            children: [
               const Text(
                 "Login to PairUp",
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
 
               const SizedBox(height: 40),
-
-              // 2. Logo Icon
               Image.asset('assets/images/pairuplogo.png', height: 90),
-
               const SizedBox(height: 60),
 
-              // 3. Email Input
+              // ✅ Email
               TextFormField(
-                // controller: _emailController, // Uncomment this in a real app
+                controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
-                  labelText: "Enter your email",
+                  labelText: "Email",
                   hintText: "example@gmail.com",
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 18.0,
-                    horizontal: 16.0,
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your email.';
+                    return 'Email is required';
                   }
-
-                  if (!value.endsWith("@gmail.com")) {
-                    return 'Email must end with @gmail.com';
+                  if (!value.contains('@')) {
+                    return 'Enter a valid email';
                   }
                   return null;
                 },
@@ -100,26 +89,20 @@ class _LoginScreenState extends State<LoginScreen> {
 
               const SizedBox(height: 20),
 
-              // 4. Password Input
+              // ✅ Password
               TextFormField(
-                // controller: _passwordController, // Uncomment this in a real app
+                controller: _passwordController,
                 obscureText: !_isPasswordVisible,
                 decoration: InputDecoration(
                   labelText: "Password",
-                  hintText: "********",
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 18.0,
-                    horizontal: 16.0,
+                    borderRadius: BorderRadius.circular(10),
                   ),
                   suffixIcon: IconButton(
                     icon: Icon(
                       _isPasswordVisible
                           ? Icons.visibility
                           : Icons.visibility_off,
-                      color: Colors.grey,
                     ),
                     onPressed: () {
                       setState(() {
@@ -130,66 +113,36 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your password.';
+                    return 'Password is required';
                   }
-
-                  if (value.length < 8) {
-                    return 'Password must be at least 8 characters long.';
+                  if (value.length < 6) {
+                    return 'Password too short';
                   }
                   return null;
                 },
               ),
 
-              const SizedBox(height: 10),
-
-              // 5. Forget Password Link
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {},
-                  child: const Text(
-                    "Forget password?",
-                    style: TextStyle(
-                      color: primaryPurple,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-
               const SizedBox(height: 20),
 
-              // 6. Log In Button
+              // ✅ Login Button
               ElevatedButton(
                 onPressed: _handleLogin,
                 style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 50),
                   backgroundColor: primaryPurple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  elevation: 0,
+                  minimumSize: const Size(double.infinity, 50),
                 ),
                 child: const Text(
                   'Login',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 30),
 
-              // 7. Registration Link
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    "Not a member yet?",
-                    style: TextStyle(fontSize: 16),
-                  ),
+                  const Text("Not a member yet?"),
                   TextButton(
                     onPressed: _navigateToRegistration,
                     child: const Text(
@@ -197,7 +150,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(
                         color: primaryPurple,
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
                       ),
                     ),
                   ),

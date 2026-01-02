@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pairup/core/services/hive/hive_service.dart';
 import 'package:pairup/features/auth/data/datasource/auth_datasource.dart';
-import 'package:pairup/features/auth/data/models/auth_hive_model.dart';
+import 'package:pairup/features/auth/data/datasource/models/auth_hive_model.dart';
 
 final authLocalDatasourceProvider = Provider<AuthLocalDatasource>((ref) {
   final hiveService = ref.watch(hiveServiceProvider);
@@ -17,9 +17,12 @@ class AuthLocalDatasource implements IAuthDataSource {
   @override
   Future<bool> register(AuthHiveModel user) async {
     try {
+      print('AuthLocalDatasource.register: email=${user.email}, password=${user.password}');
       await _hiveService.register(user);
+      print('AuthLocalDatasource.register success');
       return true;
-    } catch (_) {
+    } catch (e) {
+      print('AuthLocalDatasource.register error: $e');
       return false;
     }
   }
