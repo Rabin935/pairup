@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pairup/core/error/failures.dart';
 import 'package:pairup/core/usecases/app_usecase.dart';
-import 'package:pairup/features/auth/data/datasource/repositories/auth_repository.dart';
+import 'package:pairup/features/auth/data/repositories/auth_repository.dart';
 import 'package:pairup/features/auth/domain/repositories/auth_repository.dart';
 
 

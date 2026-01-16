@@ -92,4 +92,6 @@ class AuthHiveModel extends HiveObject {
   static List<AuthEntity> toEntityList(List<AuthHiveModel> models) {
     return models.map((model) => model.toEntity()).toList();
   }
+
+  toJson() {}
 }
