@@ -68,6 +68,8 @@ class AuthRepository implements IAuthRepository {
     }
   }
 
+  
+
   @override
   Future<Either<Failure, AuthEntity>> getCurrentUser() async {
     try {
