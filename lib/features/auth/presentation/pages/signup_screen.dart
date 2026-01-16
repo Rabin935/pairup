@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pairup/features/auth/presentation/pages/login_screen.dart';
 import 'package:pairup/core/utils/snackbar_helper.dart';
 import 'package:pairup/core/services/hive/hive_service.dart';
-import 'package:pairup/features/auth/data/datasource/models/auth_hive_model.dart';
+import 'package:pairup/features/auth/data/models/auth_hive_model.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});

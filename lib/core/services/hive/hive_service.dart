@@ -3,7 +3,7 @@ import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../constants/hive_table_constant.dart';
 import '../../../features/user/data/models/user_hive_model.dart';
-import '../../../features/auth/data/datasource/models/auth_hive_model.dart';
+import '../../../features/auth/data/models/auth_hive_model.dart';
 
 final hiveServiceProvider = Provider<HiveService>((ref) {
   return HiveService();
