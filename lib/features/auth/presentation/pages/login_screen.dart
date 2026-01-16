@@ -24,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
-    // TODO: Use repository via Riverpod instead
+    
     // For now, use HiveService
     final hiveService = HiveService();
     final user = hiveService.login(email, password);

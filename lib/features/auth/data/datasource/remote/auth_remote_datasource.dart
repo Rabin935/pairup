@@ -1,14 +1,12 @@
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pairup/core/api/api_client.dart';
 import 'package:pairup/core/api/api_endpoint.dart';
 import 'package:pairup/core/services/storage/user_session_service.dart';
 import 'package:pairup/features/auth/data/datasource/auth_datasource.dart';
 import 'package:pairup/features/auth/data/models/auth_api_model.dart';
-import 'package:pairup/features/auth/domain/usecases/register_usecase.dart';
 
 // Create Provider
-final authRemoteProvider = Provider<IAuthRemoteDataSource>((ref) {
+final authRemoteDatasourceProvider = Provider<IAuthRemoteDataSource>((ref) {
   return AuthRemoteDatasource(
     apiClient: ref.read(apiClientProvider),
     userSessionService: ref.read(userSessionServiceProvider),

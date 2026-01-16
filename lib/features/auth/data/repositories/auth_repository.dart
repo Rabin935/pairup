@@ -1,14 +1,20 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pairup/core/error/failures.dart';
+import 'package:pairup/core/services/connectivity/network_info.dart';
+import 'package:pairup/features/auth/data/datasource/auth_datasource.dart';
 import 'package:pairup/features/auth/data/datasource/local/auth_local_datasource.dart';
 import 'package:pairup/features/auth/data/datasource/remote/auth_remote_datasource.dart';
+import 'package:pairup/features/auth/data/models/auth_api_model.dart';
+import 'package:pairup/features/auth/data/models/auth_hive_model.dart';
+import 'package:pairup/features/auth/domain/entities/auth_entity.dart';
 import 'package:pairup/features/auth/domain/repositories/auth_repository.dart';
 
 
 final authRepositoryProvider = Provider<IAuthRepository>((ref) {
   final authLocalDatasource = ref.read(authLocalDatasourceProvider);
-  final authRemoteDatasource = ref.read(authRemoteProvider);
+  final authRemoteDatasource = ref.read(authRemoteDatasourceProvider);
   final networkInfo = ref.read(networkInfoProvider);
 
   return AuthRepository(
