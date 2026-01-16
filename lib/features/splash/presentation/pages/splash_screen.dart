@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pairup/app/routes/app_routes.dart';
 import 'package:pairup/core/services/storage/user_session_service.dart';
 import 'package:pairup/features/splash/presentation/pages/get_start_screen.dart';
 import 'package:pairup/features/splash/presentation/pages/navigation_botton_screen.dart';
@@ -95,7 +96,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       AppRoutes.pushReplacement(context, const NavigationBottonScreen());
     } else {
       // Navigate to Onboarding if user is not logged in
-      AppRoutes.pushReplacement(context, const OnboardingPage());
+      AppRoutes.pushReplacement(context, OnboardingScreen(onComplete: () {}));
     }
   }
 
@@ -108,6 +109,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         MaterialPageRoute(builder: (context) => const GetStartScreen()),
       );
     }
+  }
+
+  @override
+  void dispose() {
+    _fadeController.dispose();
+    _slideController.dispose();
+    _scaleController.dispose();
+    super.dispose();
   }
 
   @override

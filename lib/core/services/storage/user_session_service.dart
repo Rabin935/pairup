@@ -8,7 +8,6 @@ final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
 
 // Provider
 final userSessionServiceProvider = Provider<UserSessionService>((ref) {
-  final prefs = ref.read(sharedPreferencesProvider);
   return UserSessionService(prefs: ref.read(sharedPreferencesProvider));
 });
 
