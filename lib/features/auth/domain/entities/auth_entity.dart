@@ -9,7 +9,7 @@ class AuthEntity extends Equatable {
   // Optional profile fields (filled later)
   final int? age;
   final String? gender;
-  final String? phoneNumber;
+  final String? number;
   final String? bio;
   final List<String>? interests;
   final List<String>? photos;
@@ -26,7 +26,7 @@ class AuthEntity extends Equatable {
     required this.password,
     this.age,
     this.gender,
-    this.phoneNumber,
+    this.number,
     this.bio,
     this.interests,
     this.photos,
@@ -43,7 +43,7 @@ class AuthEntity extends Equatable {
         password,
         age,
         gender,
-        phoneNumber,
+        number,
         bio,
         interests,
         photos,

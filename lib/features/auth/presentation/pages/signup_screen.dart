@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:pairup/core/api/api_client.dart';
+import 'package:pairup/core/api/api_endpoint.dart';
 import 'package:pairup/features/auth/presentation/pages/login_screen.dart';
 import 'package:pairup/core/utils/snackbar_helper.dart';
-import 'package:pairup/core/services/hive/hive_service.dart';
-import 'package:pairup/features/auth/data/models/auth_hive_model.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SignupScreen extends StatefulWidget {
+class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  ConsumerState<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _SignupScreenState extends ConsumerState<SignupScreen> {
   // State variables
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
   bool _agreedToTerms = false; // Default value
+  final _selectedCountryCode = '+977';
 
   final _formKey = GlobalKey<FormState>();
 
@@ -26,72 +28,78 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _passController = TextEditingController();
   final TextEditingController _confirmPassController = TextEditingController();
 
-  String _selectedGender = 'Male';
+  // String _selectedGender = 'Male';
 
   // Consistent Theme Color
   static const Color primaryPurple = Color(0xFF6C63FF);
 
-  void _handleSignup() async {
+  final List<Map<String, String>> _countryCodes = [
+    {'code': '+977', 'name': 'Nepal', 'flag': '🇳🇵'},
+    {'code': '+91', 'name': 'India', 'flag': '🇮🇳'},
+    {'code': '+1', 'name': 'USA', 'flag': '🇺🇸'},
+    {'code': '+44', 'name': 'UK', 'flag': '🇬🇧'},
+    {'code': '+86', 'name': 'China', 'flag': '🇨🇳'},
+  ];
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _passController.dispose();
+    _confirmPassController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleSignup() async {
     if (!_agreedToTerms) {
       showCustomErrorSnackBar(
         context,
-        'Please agree to the Terms and Conditions.',
+        'Please agree to the Terms & Conditions',
       );
       return;
     }
 
-    if (_formKey.currentState!.validate()) {
-      final name = _nameController.text.trim();
-      final email = _emailController.text.trim();
-      final phone = _phoneController.text.trim();
-      final password = _passController.text.trim();
+    if (!_formKey.currentState!.validate()) return;
 
-      if (name.isEmpty || email.isEmpty || phone.isEmpty || password.isEmpty) {
-        showCustomErrorSnackBar(context, 'Please fill all fields');
-        return;
-      }
+    final name = _nameController.text.trim();
+    final email = _emailController.text.trim();
+    final phone = '$_selectedCountryCode${_phoneController.text.trim()}';
+    final password = _passController.text.trim();
+    final confirmPassword = _confirmPassController.text.trim();
 
-      // // DEBUG: Print data before registering
-      // print(
-      //   'Signup Data: name=$name, email=$email, phone=$phone, password=$password, gender=$_selectedGender',
-      // );
+    try {
+      // Call your backend API
+      final apiClient = ApiClient();
+      final response = await apiClient.post(
+        ApiEndpoints.userRegister,
+        data: {
+          'fullName': name,
+          'email': email,
+          'password': password,
+          'confirmPassword': confirmPassword,
+          'number': phone,
+          'authProvider': 'local',
+        },
+      );
 
-      // TODO: Call register via provider
-      // For now, use direct HiveService registration
-      try {
-        final hiveService = await HiveService();
-        final authModel = AuthHiveModel(
-          name: name,
-          email: email,
-          password: password,
-          phoneNumber: phone,
-          age: 0,
-          gender: _selectedGender,
-          interests: '',
-          photos: '',
-        );
-        await hiveService.register(authModel);
-        print('User registered successfully with email: $email');
-
+      if (response.data['success'] == true) {
         if (!mounted) return;
         showCustomSuccessSnackBar(context, 'Account created successfully!');
 
-        // Navigate to login after successful registration
-        Future.delayed(const Duration(milliseconds: 500), () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const LoginScreen()),
-          );
-        });
-      } catch (e) {
-        print('Registration error: $e');
-        showCustomErrorSnackBar(context, 'Registration failed: $e');
+        // Navigate to login
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const LoginScreen()),
+        );
+      } else {
+        showCustomErrorSnackBar(
+          context,
+          response.data['message'] ?? 'Registration failed',
+        );
       }
-    } else {
-      showCustomErrorSnackBar(
-        context,
-        'Please correct the highlighted errors.',
-      );
+    } catch (e) {
+      showCustomErrorSnackBar(context, 'Registration failed: ${e.toString()}');
     }
   }
 

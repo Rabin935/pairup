@@ -59,7 +59,7 @@ class RegisterUsecase
       name: params.name,
       email: params.email,
       password: params.password ?? '',
-      phoneNumber: params.phoneNumber,
+      number: params.phoneNumber,
       gender: params.gender,
       age: params.age,
       bio: '',
@@ -67,7 +67,6 @@ class RegisterUsecase
       photos: [],
       location: '',
     );
-    print('RegisterUsecase authEntity: password=${authEntity.password}');
 
     return _authRepository.register(authEntity);
   }

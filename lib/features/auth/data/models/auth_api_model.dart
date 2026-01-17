@@ -1,15 +1,17 @@
 import 'package:pairup/features/auth/domain/entities/auth_entity.dart';
+import 'package:uuid/uuid.dart';
 
 class AuthApiModel {
   final String? id;
   final String name;
   final String email;
   final String? password;
+  final String? confirmPassword;
 
   // Optional profile fields
   final int? age;
   final String? gender;
-  final String? phoneNumber;
+  final String? number;
   final String? bio;
   final List<String>? interests;
   final List<String>? photos;
@@ -24,9 +26,10 @@ class AuthApiModel {
     required this.name,
     required this.email,
     this.password,
+    this.confirmPassword,
     this.age,
     this.gender,
-    this.phoneNumber,
+    this.number,
     this.bio,
     this.interests,
     this.photos,
@@ -38,17 +41,19 @@ class AuthApiModel {
   // -------------------- TO JSON --------------------
   Map<String, dynamic> toJson() {
     return {
-      "name": name,
+      "fullName": name,
       "email": email,
       "password": password,
+      "confirmPassword": password,
+      "number": number,
+      "authProvider": "local",
+      "uid": const Uuid().v4(), // to auto generate id
       "age": age,
       "gender": gender,
-      "phoneNumber": phoneNumber,
       "bio": bio,
       "interests": interests,
       "photos": photos,
       "location": location,
-      "authProvider": authProvider,
       "role": role,
     };
   }
@@ -57,12 +62,12 @@ class AuthApiModel {
   factory AuthApiModel.fromJson(Map<String, dynamic> json) {
     return AuthApiModel(
       id: json['_id'] as String?,
-      name: json['name'] as String,
+      name: json['fullName'] ?? json['name'] as String,
       email: json['email'] as String,
+      number: json['number'] as String?, // Updated to match key 'number'
       password: json['password'] as String?,
       age: json['age'] as int?,
       gender: json['gender'] as String?,
-      phoneNumber: json['phoneNumber'] as String?,
       bio: json['bio'] as String?,
       interests: (json['interests'] as List<dynamic>?)
           ?.map((e) => e.toString())
@@ -85,7 +90,7 @@ class AuthApiModel {
       password: password ?? '',
       age: age,
       gender: gender,
-      phoneNumber: phoneNumber,
+      number: number,
       bio: bio,
       interests: interests,
       photos: photos,
@@ -102,9 +107,10 @@ class AuthApiModel {
       name: entity.name,
       email: entity.email,
       password: entity.password,
+      confirmPassword: entity.password, // Set confirmPassword from entity
       age: entity.age,
       gender: entity.gender,
-      phoneNumber: entity.phoneNumber,
+      number: entity.number,
       bio: entity.bio,
       interests: entity.interests,
       photos: entity.photos,
