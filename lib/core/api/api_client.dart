@@ -6,7 +6,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pairup/core/api/api_endpoint.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-
 // Provider for ApiClient
 final apiClientProvider = Provider<ApiClient>((ref) {
   return ApiClient();
@@ -149,10 +148,7 @@ class _AuthInterceptor extends Interceptor {
     RequestInterceptorHandler handler,
   ) async {
     // Skip auth for public endpoints
-    final publicEndpoints = [
-      ApiEndpoints.users,
-      ApiEndpoints.userLogin,
-    ];
+    final publicEndpoints = [ApiEndpoints.userRegister, ApiEndpoints.userLogin];
 
     final isPublicGet =
         options.method == 'GET' &&
@@ -160,7 +156,7 @@ class _AuthInterceptor extends Interceptor {
 
     final isAuthEndpoint =
         options.path == ApiEndpoints.userLogin ||
-        options.path == ApiEndpoints.users;
+        options.path == ApiEndpoints.userRegister;
 
     if (!isPublicGet && !isAuthEndpoint) {
       final token = await _storage.read(key: _tokenKey);

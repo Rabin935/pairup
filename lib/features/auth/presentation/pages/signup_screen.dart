@@ -51,10 +51,10 @@ class _SignupScreenState extends State<SignupScreen> {
         return;
       }
 
-      // DEBUG: Print data before registering
-      print(
-        'Signup Data: name=$name, email=$email, phone=$phone, password=$password, gender=$_selectedGender',
-      );
+      // // DEBUG: Print data before registering
+      // print(
+      //   'Signup Data: name=$name, email=$email, phone=$phone, password=$password, gender=$_selectedGender',
+      // );
 
       // TODO: Call register via provider
       // For now, use direct HiveService registration
