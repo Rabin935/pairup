@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pairup/core/utils/navigation_help.dart';
 import 'package:pairup/core/utils/snackbar_helper.dart';
-import 'package:pairup/core/services/hive/hive_service.dart';
+import 'package:pairup/features/auth/presentation/view_model/auth_viewmodel.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _isPasswordVisible = false;
   final _formkey = GlobalKey<FormState>();
 
@@ -18,24 +19,25 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _handleLogin() {
+  Future<void> _handleLogin() async {
     if (!_formkey.currentState!.validate()) return;
 
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
-    
-    // For now, use HiveService
-    final hiveService = HiveService();
-    final user = hiveService.login(email, password);
+    final authState = ref.read(authViewModelProvider.notifier);
 
-    if (user == null) {
-      showCustomErrorSnackBar(context, 'Invalid email or password');
-      return;
+    try {
+      await authState.login(email, password);
+
+      if (mounted) {
+        navigateToHomeReplacement(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        showCustomErrorSnackBar(context, 'Invalid email or password');
+      }
     }
-
-    // ✅ Login success
-    navigateToHomeReplacement(context);
   }
 
   void _navigateToRegistration() {
