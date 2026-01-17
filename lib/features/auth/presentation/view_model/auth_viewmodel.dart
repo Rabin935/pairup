@@ -27,12 +27,12 @@ class AuthViewModel extends Notifier<AuthState> {
   Future<void> register({
     required String fullName,
     required String email,
-    required String username,
+    String? username,
     required String password,
-    String? phoneNumber,
+    required String phoneNumber,
     String? batchId,
-    required int age,
-    required String gender,
+    int? age,
+    String? gender,
   }) async {
     state = state.copyWith(status: AuthStatus.loading);
 
@@ -41,9 +41,9 @@ class AuthViewModel extends Notifier<AuthState> {
         name: fullName,
         email: email,
         password: password,
-        age: age,
-        gender: gender,
-        phoneNumber: phoneNumber ?? '',
+        age: 0,
+        gender: '',
+        phoneNumber: phoneNumber,
       ),
     );
 
@@ -56,7 +56,7 @@ class AuthViewModel extends Notifier<AuthState> {
     );
   }
 
-  Future<void> login({required String email, required String password}) async {
+  Future<void> login(String email, String password) async {
     state = state.copyWith(status: AuthStatus.loading);
 
     final result = await _loginUsecase(

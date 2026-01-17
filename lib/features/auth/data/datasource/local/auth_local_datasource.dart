@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pairup/core/services/hive/hive_service.dart';
 import 'package:pairup/core/services/storage/user_session_service.dart';
 import 'package:pairup/features/auth/data/datasource/auth_datasource.dart';
-import 'package:pairup/features/auth/data/datasource/models/auth_hive_model.dart';
+import 'package:pairup/features/auth/data/models/auth_hive_model.dart';
 
 final authLocalDatasourceProvider = Provider<AuthLocalDatasource>((ref) {
   final hiveService = ref.watch(hiveServiceProvider);
@@ -13,7 +13,7 @@ final authLocalDatasourceProvider = Provider<AuthLocalDatasource>((ref) {
   );
 });
 
-class AuthLocalDatasource implements IAuthDataSource {
+class AuthLocalDatasource implements IAuthLocalDataSource {
   final HiveService _hiveService;
   final UserSessionService _userSessionService;
 

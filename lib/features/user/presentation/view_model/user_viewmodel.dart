@@ -6,6 +6,10 @@ import 'package:pairup/features/user/domain/usecases/get_user_by_id_usecase.dart
 import 'package:pairup/features/user/domain/usecases/update_user_usecase.dart';
 import 'package:pairup/features/user/presentation/state/use_state.dart';
 
+final userViewmodelProvider = NotifierProvider<UserViewmodel, UserState>(
+  UserViewmodel.new,
+);
+
 class UserViewmodel extends Notifier<UserState> {
   late final GetAllUserUsecase _getAllUserUsecase;
   late final CreateUserUsecase _createUserUsecase;

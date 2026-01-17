@@ -5,41 +5,50 @@ class AuthEntity extends Equatable {
   final String name;
   final String email;
   final String password;
-  final int age;
-  final String gender;
-  final String phoneNumber;
-  final String bio;
-  final List<String> interests;
-  final List<String> photos;
-  final String location;
+
+  // Optional profile fields (filled later)
+  final int? age;
+  final String? gender;
+  final String? number;
+  final String? bio;
+  final List<String>? interests;
+  final List<String>? photos;
+  final String? location;
+
+  // Auth-related
+  final String? authProvider;
+  final String? role;
 
   const AuthEntity({
     this.userId,
     required this.name,
     required this.email,
     required this.password,
-    required this.age,
-    required this.gender,
-    required this.phoneNumber,
-    required this.bio,
-    required this.interests,
-    required this.photos,
-    required this.location, 
+    this.age,
+    this.gender,
+    this.number,
+    this.bio,
+    this.interests,
+    this.photos,
+    this.location,
+    this.authProvider,
+    this.role,
   });
 
   @override
   List<Object?> get props => [
-    userId,
-    name,
-    email,
-    password,
-    
-    age,
-    gender,
-    bio,
-    interests,
-    photos,
-    location,
-    phoneNumber,
-  ];
+        userId,
+        name,
+        email,
+        password,
+        age,
+        gender,
+        number,
+        bio,
+        interests,
+        photos,
+        location,
+        authProvider,
+        role,
+      ];
 }

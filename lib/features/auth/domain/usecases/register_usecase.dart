@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pairup/core/error/failures.dart';
 import 'package:pairup/core/usecases/app_usecase.dart';
-import 'package:pairup/features/auth/data/datasource/repositories/auth_repository.dart';
+import 'package:pairup/features/auth/data/repositories/auth_repository.dart';
 import 'package:pairup/features/auth/domain/entities/auth_entity.dart';
 import 'package:pairup/features/auth/domain/repositories/auth_repository.dart';
 
@@ -59,7 +59,7 @@ class RegisterUsecase
       name: params.name,
       email: params.email,
       password: params.password ?? '',
-      phoneNumber: params.phoneNumber,
+      number: params.phoneNumber,
       gender: params.gender,
       age: params.age,
       bio: '',
@@ -67,7 +67,6 @@ class RegisterUsecase
       photos: [],
       location: '',
     );
-    print('RegisterUsecase authEntity: password=${authEntity.password}');
 
     return _authRepository.register(authEntity);
   }
