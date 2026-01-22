@@ -42,7 +42,8 @@ class AuthLocalDatasource implements IAuthLocalDataSource {
         await _userSessionService.saveUserSession(
           userId: user.userId,
           email: user.email,
-          fullName: user.name,
+          firstname: user.firstname,
+          lastname: user.lastname,
         );
       }
       return user;

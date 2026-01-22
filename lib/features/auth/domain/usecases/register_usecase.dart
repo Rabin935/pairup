@@ -56,7 +56,8 @@ class RegisterUsecase
       'RegisterUsecase called with: name=${params.name}, email=${params.email}, password=${params.password}, phoneNumber=${params.phoneNumber}',
     );
     final authEntity = AuthEntity(
-      name: params.name,
+      firstname: params.name,
+      lastname: params.name,
       email: params.email,
       password: params.password ?? '',
       number: params.phoneNumber,

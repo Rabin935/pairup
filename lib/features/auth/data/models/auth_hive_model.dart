@@ -10,38 +10,42 @@ class AuthHiveModel extends HiveObject {
   String userId;
 
   @HiveField(1)
-  String name;
+  String firstname;
 
   @HiveField(2)
-  String email;
+  String lastname;
 
   @HiveField(3)
-  String password;
+  String email;
 
   @HiveField(4)
-  String? number;
+  String password;
 
   @HiveField(5)
-  int? age;
+  String? number;
 
   @HiveField(6)
-  String? gender;
+  int? age;
 
   @HiveField(7)
-  String? bio;
+  String? gender;
 
   @HiveField(8)
-  String? interests; // stored as comma-separated
+  String? bio;
 
   @HiveField(9)
-  String? photos; // stored as comma-separated
+  String? interests; // stored as comma-separated
 
   @HiveField(10)
+  String? photos; // stored as comma-separated
+
+  @HiveField(11)
   String? location;
 
   AuthHiveModel({
     String? userId,
-    required this.name,
+    required this.firstname,
+    required this.lastname,
     required this.email,
     required this.password,
     this.number,
@@ -58,7 +62,8 @@ class AuthHiveModel extends HiveObject {
   AuthEntity toEntity() {
     return AuthEntity(
       userId: userId,
-      name: name,
+      firstname: firstname,
+      lastname: lastname,
       email: email,
       password: password,
       number: number,
@@ -75,7 +80,8 @@ class AuthHiveModel extends HiveObject {
   factory AuthHiveModel.fromEntity(AuthEntity entity) {
     return AuthHiveModel(
       userId: entity.userId,
-      name: entity.name,
+      firstname: entity.firstname,
+      lastname: entity.lastname,
       email: entity.email,
       password: entity.password,
       number: entity.number,

@@ -18,16 +18,17 @@ class AuthHiveModelAdapter extends TypeAdapter<AuthHiveModel> {
     };
     return AuthHiveModel(
       userId: fields[0] as String?,
-      name: fields[1] as String,
-      email: fields[2] as String,
-      password: fields[3] as String,
-      number: fields[4] as String?,
-      age: fields[5] as int?,
-      gender: fields[6] as String?,
-      bio: fields[7] as String?,
-      interests: fields[8] as String?,
-      photos: fields[9] as String?,
-      location: fields[10] as String?,
+      firstname: fields[1] as String,
+      lastname: fields[2] as String,
+      email: fields[3] as String,
+      password: fields[4] as String,
+      number: fields[5] as String?,
+      age: fields[6] as int?,
+      gender: fields[7] as String?,
+      bio: fields[8] as String?,
+      interests: fields[9] as String?,
+      photos: fields[10] as String?,
+      location: fields[11] as String?,
     );
   }
 
@@ -38,24 +39,26 @@ class AuthHiveModelAdapter extends TypeAdapter<AuthHiveModel> {
       ..writeByte(0)
       ..write(obj.userId)
       ..writeByte(1)
-      ..write(obj.name)
+      ..write(obj.firstname)
       ..writeByte(2)
-      ..write(obj.email)
+      ..write(obj.lastname)
       ..writeByte(3)
-      ..write(obj.password)
+      ..write(obj.email)
       ..writeByte(4)
-      ..write(obj.number)
+      ..write(obj.password)
       ..writeByte(5)
-      ..write(obj.age)
+      ..write(obj.number)
       ..writeByte(6)
-      ..write(obj.gender)
+      ..write(obj.age)
       ..writeByte(7)
-      ..write(obj.bio)
+      ..write(obj.gender)
       ..writeByte(8)
-      ..write(obj.interests)
+      ..write(obj.bio)
       ..writeByte(9)
-      ..write(obj.photos)
+      ..write(obj.interests)
       ..writeByte(10)
+      ..write(obj.photos)
+      ..writeByte(11)
       ..write(obj.location);
   }
 
