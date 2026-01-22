@@ -3,7 +3,8 @@ import 'package:uuid/uuid.dart';
 
 class AuthApiModel {
   final String? id;
-  final String name;
+  final String firstname;
+  final String lastname;
   final String email;
   final String? password;
   final String? confirmPassword;
@@ -23,7 +24,8 @@ class AuthApiModel {
 
   AuthApiModel({
     this.id,
-    required this.name,
+    required this.firstname,
+    required this.lastname,
     required this.email,
     this.password,
     this.confirmPassword,
@@ -41,7 +43,8 @@ class AuthApiModel {
   // -------------------- TO JSON --------------------
   Map<String, dynamic> toJson() {
     return {
-      "fullName": name,
+      "firstname": firstname,
+      "lastname": lastname,
       "email": email,
       "password": password,
       "confirmPassword": password,
@@ -62,7 +65,8 @@ class AuthApiModel {
   factory AuthApiModel.fromJson(Map<String, dynamic> json) {
     return AuthApiModel(
       id: json['_id'] as String?,
-      name: json['fullName'] ?? json['name'] as String,
+      firstname: json['firstname'] ?? json['firstname'] as String,
+      lastname: json['firstname'] ?? json['firstname'] as String,
       email: json['email'] as String,
       number: json['number'] as String?, // Updated to match key 'number'
       password: json['password'] as String?,
@@ -85,7 +89,8 @@ class AuthApiModel {
   AuthEntity toEntity() {
     return AuthEntity(
       userId: id,
-      name: name,
+      firstname: firstname,
+      lastname: lastname,
       email: email,
       password: password ?? '',
       age: age,
@@ -104,7 +109,8 @@ class AuthApiModel {
   factory AuthApiModel.fromEntity(AuthEntity entity) {
     return AuthApiModel(
       id: entity.userId,
-      name: entity.name,
+      firstname: entity.firstname,
+      lastname: entity.lastname,
       email: entity.email,
       password: entity.password,
       confirmPassword: entity.password, // Set confirmPassword from entity
