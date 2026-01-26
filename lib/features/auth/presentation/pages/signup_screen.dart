@@ -33,13 +33,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   // Consistent Theme Color
   static const Color primaryPurple = Color(0xFF6C63FF);
 
-  final List<Map<String, String>> _countryCodes = [
-    {'code': '+977', 'name': 'Nepal', 'flag': '🇳🇵'},
-    {'code': '+91', 'name': 'India', 'flag': '🇮🇳'},
-    {'code': '+1', 'name': 'USA', 'flag': '🇺🇸'},
-    {'code': '+44', 'name': 'UK', 'flag': '🇬🇧'},
-    {'code': '+86', 'name': 'China', 'flag': '🇨🇳'},
-  ];
+  // final List<Map<String, String>> _countryCodes = [
+  //   {'code': '+977', 'name': 'Nepal', 'flag': '🇳🇵'},
+  //   {'code': '+91', 'name': 'India', 'flag': '🇮🇳'},
+  //   {'code': '+1', 'name': 'USA', 'flag': '🇺🇸'},
+  //   {'code': '+44', 'name': 'UK', 'flag': '🇬🇧'},
+  //   {'code': '+86', 'name': 'China', 'flag': '🇨🇳'},
+  // ];
 
   @override
   void dispose() {
