@@ -23,25 +23,17 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    // final emailFinder = find.byKey(const Key('email'));
+    final emailFinder = find.byKey(const Key('email'));
 
-    // expect(emailFinder, findsOneWidget);
+    expect(emailFinder, findsOneWidget);
 
-    // await tester.enterText(emailFinder, 'test@gmail.com');
+    await tester.enterText(emailFinder, 'test@gmail.com');
 
-    // await tester.pump();
+    await tester.pump();
 
-    // expect(find.text('test@gmail.com'), findsOneWidget);
+    expect(find.text('test@gmail.com'), findsOneWidget);
 
-    final emailFinder = find.text('Create Account');
-
-  await tester.ensureVisible(emailFinder);
-  await tester.tap(emailFinder);
-
-  await tester.pumpAndSettle();
-
-  expect(emailFinder, findsOneWidget);
-  expect(find.text('test@gmail.com'), findsOneWidget);
+    
   });
 
   testWidgets('Shows validation error on empty signup', (tester) async {

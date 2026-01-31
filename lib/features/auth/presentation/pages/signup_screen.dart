@@ -391,6 +391,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextFormField(
+        key: fieldKey,
         controller: controller,
         keyboardType: keyboardType,
         decoration: _inputDecoration(hint, icon),
