@@ -24,4 +24,20 @@ void main() {
     expect(find.text('Ram'), findsOneWidget);
     expect(find.text('Tamang'), findsOneWidget);
   });
+
+
+  testWidgets('Testing email and password', (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: SignupScreen()));
+
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField).first, 'ram@gmail.com');
+    await tester.enterText(find.byType(TextField).last, 'Tamang123');
+
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Create Account'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('ram@gmail.com'), findsOneWidget);
+    expect(find.text('Tamang123'), findsOneWidget);
+  });
 }
