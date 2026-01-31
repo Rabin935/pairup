@@ -9,7 +9,8 @@ import 'package:pairup/features/auth/domain/repositories/auth_repository.dart';
 
 class RegisterUsecaseParams extends Equatable {
   final String? userId;
-  final String name;
+  final String firstname;
+  final String lastname;
   final String email;
   final String? password;
   final int age;
@@ -22,7 +23,8 @@ class RegisterUsecaseParams extends Equatable {
 
   const RegisterUsecaseParams({
     this.userId,
-    required this.name,
+    required this.firstname,
+    required this.lastname,
     required this.email,
     this.password,
     required this.age,
@@ -35,7 +37,15 @@ class RegisterUsecaseParams extends Equatable {
   });
 
   @override
-  List<Object?> get props => [name, email, age, phoneNumber, gender, password];
+  List<Object?> get props => [
+    firstname,
+    lastname,
+    email,
+    age,
+    phoneNumber,
+    gender,
+    password,
+  ];
 }
 
 final registerUsecaseProvider = Provider<RegisterUsecase>((ref) {
@@ -53,11 +63,11 @@ class RegisterUsecase
   @override
   Future<Either<Failure, bool>> call(RegisterUsecaseParams params) {
     print(
-      'RegisterUsecase called with: name=${params.name}, email=${params.email}, password=${params.password}, phoneNumber=${params.phoneNumber}',
+      'RegisterUsecase called with: firstname=${params.firstname}, lastname=${params.lastname} , email=${params.email}, password=${params.password}, phoneNumber=${params.phoneNumber}',
     );
     final authEntity = AuthEntity(
-      firstname: params.name,
-      lastname: params.name,
+      firstname: params.firstname,
+      lastname: params.lastname,
       email: params.email,
       password: params.password ?? '',
       number: params.phoneNumber,

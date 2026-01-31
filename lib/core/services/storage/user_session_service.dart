@@ -65,7 +65,7 @@ class UserSessionService {
   }
 
   // Get current user full name
-  String? getCurrentUserFullName() {
+  String? getCurrentUserFirstName() {
     return _prefs.getString(_keyUserFirstName);
   }
 
