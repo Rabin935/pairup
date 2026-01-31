@@ -22,7 +22,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
 
   // Controllers
-  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _firstnameController = TextEditingController();
+  final TextEditingController _lastnameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
@@ -43,7 +44,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
   @override
   void dispose() {
-    _nameController.dispose();
+    _firstnameController.dispose();
+    _lastnameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
     _passController.dispose();
@@ -62,7 +64,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
     if (!_formKey.currentState!.validate()) return;
 
-    final name = _nameController.text.trim();
+    final firstname = _firstnameController.text.trim();
+    final lastname = _lastnameController.text.trim();
     final email = _emailController.text.trim();
     final phone = '$_selectedCountryCode${_phoneController.text.trim()}';
     final password = _passController.text.trim();
@@ -74,7 +77,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       final response = await apiClient.post(
         ApiEndpoints.userRegister,
         data: {
-          'fullName': name,
+          'firstname': firstname,
+          'lastname': lastname,
           'email': email,
           'password': password,
           'confirmPassword': confirmPassword,
@@ -141,9 +145,15 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
               // 3. Full Name Field
               _buildTextField(
-                hint: "Full Name",
+                hint: "First Name",
                 icon: Icons.person_outline,
-                controller: _nameController,
+                controller: _firstnameController,
+              ),
+
+              _buildTextField(
+                hint: "last Name",
+                icon: Icons.person_outline,
+                controller: _lastnameController,
               ),
 
               // 4. Email Field

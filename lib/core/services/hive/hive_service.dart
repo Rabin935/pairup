@@ -32,7 +32,7 @@ class HiveService {
   }
 
   Future<void> _openBoxes() async {
-    await Hive.openBox<AuthHiveModel>(HiveTableConstant.userTable);
+    var box = await Hive.openBox<AuthHiveModel>(HiveTableConstant.userTable);
   }
 
   Future<void> close() async {

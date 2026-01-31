@@ -16,14 +16,18 @@ class ApiEndpoints {
   static const String comIpAddress = "192.168.1.1";
 
   static String get baseUrl {
+    if (isPhysicalDevice) {
+      return 'http://$comIpAddress:3000/api';
+    }
+
     if (kIsWeb) {
-      return 'http://localhost:3000/api/auth';
+      return 'http://localhost:3000/api';
     } else if (Platform.isAndroid) {
-      return 'http://10.0.2.2:3000/api/auth';
+      return 'http://10.0.2.2:3000/api';
     } else if (Platform.isIOS) {
-      return "http://localhost:3000/api/auth";
+      return "http://localhost:3000/api";
     } else {
-      return "http://localhost:3000/api/auth";
+      return "http://localhost:3000/api";
     }
   }
 
