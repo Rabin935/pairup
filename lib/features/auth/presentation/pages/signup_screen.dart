@@ -205,6 +205,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
               // 7. Password Field
               TextFormField(
+                key: const Key('password'),
                 controller: _passController,
                 obscureText: !_isPasswordVisible,
                 decoration:
