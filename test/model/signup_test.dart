@@ -1,15 +1,73 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pairup/features/auth/domain/entities/auth_entity.dart';
+import 'package:pairup/features/auth/presentation/pages/signup_screen.dart';
 
 void main() {
-  group('Arithmetic test1', () {
-    test('add two number', () {
-      final firstname = Arithmetic();
-      int expectedValue = 7;
-      arithmetic.first = 3;
-      arithmetic.second = 4;
-      int? actualValue = arithmetic.add();
+  test('AuthEntity creates correctly', () {
+    final user = AuthEntity(
+      firstname: "Rabin",
+      lastname: "Rabin",
+      email: "rabin@test.com",
+      password: "123456",
+    );
 
-      expect(expectedValue, actualValue);
-    });
+    expect(user.firstname, "Rabin");
+    expect(user.lastname, "Rabin");
+    expect(user.email, "rabin@test.com");
+    expect(user.password, "123456");
+  });
+
+  testWidgets('Email field accepts input', (tester) async {
+    await tester.pumpWidget(MaterialApp(home: SignupScreen()));
+
+    await tester.pumpAndSettle();
+
+    final emailFinder = find.byKey(const Key('email'));
+
+    expect(emailFinder, findsOneWidget);
+
+    await tester.enterText(emailFinder, 'test@gmail.com');
+
+    await tester.pump();
+
+    expect(find.text('test@gmail.com'), findsOneWidget);
+  });
+
+  testWidgets('Shows validation error on empty signup', (tester) async {
+  await tester.pumpWidget(
+    MaterialApp(home: SignupScreen()),
+  );
+
+  await tester.pumpAndSettle();
+
+  final buttonFinder = find.text('Create Account');
+
+  await tester.ensureVisible(buttonFinder);
+  await tester.tap(buttonFinder);
+
+  await tester.pumpAndSettle();
+
+  expect(find.textContaining('Email'), findsOneWidget);
+  expect(find.textContaining('Password'), findsOneWidget);
+});
+
+
+  testWidgets('Password is obscured', (tester) async {
+    await tester.pumpWidget(MaterialApp(home: SignupScreen()));
+
+    final passwordField = tester.widget<TextFormField>(
+      find.byKey(Key('password')),
+    );
+
+    expect(passwordField, true);
+  });
+
+  testWidgets('Signup button present', (tester) async {
+    await tester.pumpWidget(MaterialApp(home: SignupScreen()));
+
+    final button = find.byType(ElevatedButton);
+
+    expect(button, findsOneWidget);
   });
 }

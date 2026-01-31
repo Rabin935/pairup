@@ -158,6 +158,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
               // 4. Email Field
               _buildTextField(
+                fieldKey: const Key('email'),
                 hint: "Email Address",
                 icon: Icons.email_outlined,
                 keyboardType: TextInputType.emailAddress,
@@ -380,6 +381,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
   Widget _buildTextField({
+    Key? fieldKey,
     required String hint,
     required IconData icon,
     TextInputType keyboardType = TextInputType.text,
@@ -393,7 +395,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
         decoration: _inputDecoration(hint, icon),
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'This field is required';
+            return 'Email is required';
           }
           if (hint.contains('Email') && !value.contains('@')) {
             return 'Enter a valid email';
