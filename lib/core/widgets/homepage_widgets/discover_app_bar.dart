@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class DiscoverAppBar extends StatelessWidget {
-  const DiscoverAppBar({super.key});
+  final VoidCallback? onRefresh;
+
+  const DiscoverAppBar({super.key, this.onRefresh});
 
   @override
   Widget build(BuildContext context) {
@@ -21,22 +23,27 @@ class DiscoverAppBar extends StatelessWidget {
                 Text("Kathmandu", style: TextStyle(color: Colors.grey)),
               ],
             ),
-            _buildSquareButton(Icons.tune),
+            _buildSquareButton(
+              onRefresh != null ? Icons.refresh : Icons.tune,
+              onTap: onRefresh,
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildSquareButton(IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade200),
-        borderRadius: BorderRadius.circular(15),
+  Widget _buildSquareButton(IconData icon, {VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade200),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Icon(icon, color: Colors.black),
       ),
-
-      child: Icon(icon, color: Colors.black),
     );
   }
 }
