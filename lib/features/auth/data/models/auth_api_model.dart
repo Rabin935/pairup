@@ -47,7 +47,7 @@ class AuthApiModel {
       "lastname": lastname,
       "email": email,
       "password": password,
-      "confirmPassword": password,
+      "confirmPassword": confirmPassword ?? password,
       "number": number,
       "authProvider": "local",
       "uid": const Uuid().v4(), // to auto generate id
@@ -65,10 +65,10 @@ class AuthApiModel {
   factory AuthApiModel.fromJson(Map<String, dynamic> json) {
     return AuthApiModel(
       id: json['_id'] as String?,
-      firstname: json['firstname'] ?? json['firstname'] as String,
-      lastname: json['firstname'] ?? json['firstname'] as String,
+      firstname: (json['firstname'] ?? '') as String,
+      lastname: (json['lastname'] ?? '') as String,
       email: json['email'] as String,
-      number: json['number'] as String?, // Updated to match key 'number'
+      number: json['number']?.toString(),
       password: json['password'] as String?,
       age: json['age'] as int?,
       gender: json['gender'] as String?,
