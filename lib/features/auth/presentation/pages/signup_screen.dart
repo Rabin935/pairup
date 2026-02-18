@@ -97,12 +97,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
           MaterialPageRoute(builder: (_) => const LoginScreen()),
         );
       } else {
+        if (!mounted) return;
         showCustomErrorSnackBar(
           context,
           response.data['message'] ?? 'Registration failed',
         );
       }
     } catch (e) {
+      if (!mounted) return;
       showCustomErrorSnackBar(context, 'Registration failed: ${e.toString()}');
     }
   }
@@ -112,10 +114,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black54),
-          onPressed: () => Navigator.pop(context),
-        ),
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
