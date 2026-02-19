@@ -9,18 +9,11 @@ class GetStartScreen extends StatelessWidget {
   // Define the gradient colors based on the design
   static const Color startColor = Color(0xFF6A5ACD); // Example Blue-Purple
   static const Color endColor = Color(0xFF8A2BE2); // Example Violet-Purple
-  static const Color buttonTextColor = Color(
-    0xFF000000,
-  ); 
+  static const Color buttonTextColor = Color(0xFF000000);
 
- 
   void _navigateToOnboarding(BuildContext context) {
-    
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        
-        builder: (context) => OnboardingScreen(onComplete: () {}),
-      ),
+      MaterialPageRoute(builder: (context) => const OnboardingScreen()),
     );
   }
 
