@@ -6,7 +6,9 @@ import 'package:pairup/features/splash/presentation/pages/bottom_screens/like_sc
 import 'package:pairup/features/splash/presentation/pages/bottom_screens/profile_screen.dart';
 
 class NavigationBottonScreen extends ConsumerStatefulWidget {
-  const NavigationBottonScreen({super.key});
+  final int initialTabIndex;
+
+  const NavigationBottonScreen({super.key, this.initialTabIndex = 0});
 
   @override
   ConsumerState<NavigationBottonScreen> createState() =>
@@ -15,7 +17,7 @@ class NavigationBottonScreen extends ConsumerStatefulWidget {
 
 class _NavigationBottonScreenState
     extends ConsumerState<NavigationBottonScreen> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
 
   static const List<Widget> _btmScreen = [
     HomeScreen(),
@@ -23,6 +25,13 @@ class _NavigationBottonScreenState
     ChatScreen(),
     ProfileScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    final index = widget.initialTabIndex;
+    _selectedIndex = (index >= 0 && index < _btmScreen.length) ? index : 0;
+  }
 
   @override
   Widget build(BuildContext context) {
