@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pairup/app/routes/app_routes.dart';
 import 'package:pairup/core/services/storage/user_session_service.dart';
-import 'package:pairup/features/splash/presentation/pages/get_start_screen.dart';
+import 'package:pairup/features/auth/presentation/pages/login_screen.dart';
 import 'package:pairup/features/splash/presentation/pages/navigation_botton_screen.dart';
-import 'package:pairup/features/splash/presentation/pages/onboarding_screen.dart';
 // Note: Ensure the path above is correct for your project structure
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -31,8 +29,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     _setupAnimations();
     _startAnimations();
     _navigateToNext();
-
-    _startAppLoading();
   }
 
   void _setupAnimations() {
@@ -92,21 +88,18 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     final isLoggedIn = userSessionService.isLoggedIn();
 
     if (isLoggedIn) {
-      // Navigate to Dashboard if user is logged in
-      AppRoutes.pushReplacement(context, const NavigationBottonScreen());
+      // Logged in: always enter app directly (profile tab).
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => const NavigationBottonScreen(initialTabIndex: 3),
+        ),
+        (route) => false,
+      );
     } else {
-      // Navigate to Onboarding if user is not logged in
-      AppRoutes.pushReplacement(context, OnboardingScreen(onComplete: () {}));
-    }
-  }
-
-  void _startAppLoading() async {
-    // Wait for 3 seconds
-    await Future.delayed(const Duration(seconds: 3));
-
-    if (mounted) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const GetStartScreen()),
+      // Logged out: start from auth flow.
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+        (route) => false,
       );
     }
   }
@@ -124,17 +117,27 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image.asset('assets/images/pairup.png', height: 600),
-
-            const SizedBox(height: 50),
-
-            const CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF673AB7)),
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: SlideTransition(
+            position: _slideAnimation,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                FadeTransition(
+                  opacity: _logoFadeAnimation,
+                  child: ScaleTransition(
+                    scale: _scaleAnimation,
+                    child: Image.asset('assets/images/pairup.png', height: 600),
+                  ),
+                ),
+                const SizedBox(height: 50),
+                const CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF673AB7)),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
