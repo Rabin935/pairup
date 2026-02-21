@@ -50,6 +50,7 @@ dependencies:
 
   # Real-time Features
   web_socket_channel: ^3.0.3
+  socket_io_client: ^3.1.2
 
   # Utilities
   freezed_annotation: ^3.1.0
