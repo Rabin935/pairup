@@ -44,6 +44,8 @@ class ApiEndpoints {
   static const String matches = '/api/matches';
   static const String pendingLikes = '/api/likes/pending';
   static const String pendingInvites = '/api/invites/pending';
+  static const String postLikeNotifications =
+      '/api/users/me/post-like-notifications';
   static String acceptLike(String senderId) => '/api/likes/$senderId/accept';
   static String declineLike(String senderId) => '/api/likes/$senderId/decline';
   static String acceptInvite(String invitationId) =>
