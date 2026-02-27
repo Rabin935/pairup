@@ -127,10 +127,7 @@ class DiscoverCardState extends State<DiscoverCard> {
     try {
       await _apiClient.post(
         '/api/swipes',
-        data: {
-          'swipedUserId': userId,
-          'action': action,
-        },
+        data: {'swipedUserId': userId, 'action': action},
       );
 
       if (!mounted) return;
@@ -166,7 +163,7 @@ class DiscoverCardState extends State<DiscoverCard> {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).cardColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -187,7 +184,10 @@ class DiscoverCardState extends State<DiscoverCard> {
               ),
               Text(
                 _text(user['name'], 'User'),
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 6),
               Text(
@@ -235,7 +235,9 @@ class DiscoverCardState extends State<DiscoverCard> {
                     child: url.isEmpty
                         ? Container(
                             color: Colors.grey.shade200,
-                            child: const Icon(Icons.image_not_supported_outlined),
+                            child: const Icon(
+                              Icons.image_not_supported_outlined,
+                            ),
                           )
                         : Image.network(
                             url,
@@ -273,6 +275,7 @@ class DiscoverCardState extends State<DiscoverCard> {
   }
 
   Widget _buildCard(Map<String, dynamic> user, {bool isTop = false}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final name = _text(user['name'], 'User');
     final age = _text(user['age']);
     final location = _text(user['location'], 'Unknown location');
@@ -286,7 +289,7 @@ class DiscoverCardState extends State<DiscoverCard> {
     final card = Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: Colors.grey.shade100,
+        color: isDark ? const Color(0xFF1C2028) : Colors.grey.shade100,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.08),
@@ -302,16 +305,27 @@ class DiscoverCardState extends State<DiscoverCard> {
           children: [
             imageUrl.isEmpty
                 ? Container(
-                    color: Colors.grey.shade300,
-                    child: const Icon(Icons.person, size: 80, color: Colors.white),
+                    color: isDark
+                        ? const Color(0xFF303542)
+                        : Colors.grey.shade300,
+                    child: const Icon(
+                      Icons.person,
+                      size: 80,
+                      color: Colors.white,
+                    ),
                   )
                 : Image.network(
                     imageUrl,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
-                        color: Colors.grey.shade300,
-                        child: const Icon(Icons.broken_image_outlined, size: 50),
+                        color: isDark
+                            ? const Color(0xFF303542)
+                            : Colors.grey.shade300,
+                        child: const Icon(
+                          Icons.broken_image_outlined,
+                          size: 50,
+                        ),
                       );
                     },
                   ),
@@ -428,10 +442,7 @@ class DiscoverCardState extends State<DiscoverCard> {
                 left: 20,
                 child: Opacity(
                   opacity: likeOpacity,
-                  child: _SwipeTag(
-                    text: 'LIKE',
-                    color: Colors.green,
-                  ),
+                  child: _SwipeTag(text: 'LIKE', color: Colors.green),
                 ),
               ),
               Positioned(
@@ -439,10 +450,7 @@ class DiscoverCardState extends State<DiscoverCard> {
                 right: 20,
                 child: Opacity(
                   opacity: passOpacity,
-                  child: _SwipeTag(
-                    text: 'PASS',
-                    color: Colors.red,
-                  ),
+                  child: _SwipeTag(text: 'PASS', color: Colors.red),
                 ),
               ),
             ],
@@ -459,18 +467,25 @@ class DiscoverCardState extends State<DiscoverCard> {
     }
 
     if (_needsProfileCompletion) {
+      final isDark = Theme.of(context).brightness == Brightness.dark;
       return Center(
         child: Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: const Color(0xFFE9E9E9)),
-            color: Colors.white,
+            border: Border.all(
+              color: isDark ? const Color(0xFF323843) : const Color(0xFFE9E9E9),
+            ),
+            color: isDark ? const Color(0xFF1C2028) : Colors.white,
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.assignment_turned_in_outlined, size: 42, color: Color(0xFF7F3DDB)),
+              const Icon(
+                Icons.assignment_turned_in_outlined,
+                size: 42,
+                color: Color(0xFF7F3DDB),
+              ),
               const SizedBox(height: 10),
               const Text(
                 'Complete your profile to discover users',
@@ -480,8 +495,13 @@ class DiscoverCardState extends State<DiscoverCard> {
               const SizedBox(height: 12),
               ElevatedButton(
                 onPressed: _openCompleteProfile,
-                style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF7F3DDB)),
-                child: const Text('Complete Profile', style: TextStyle(color: Colors.white)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF7F3DDB),
+                ),
+                child: const Text(
+                  'Complete Profile',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ],
           ),
@@ -496,10 +516,7 @@ class DiscoverCardState extends State<DiscoverCard> {
           children: [
             const Text('No users to discover right now'),
             const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: _loadUsers,
-              child: const Text('Refresh'),
-            ),
+            ElevatedButton(onPressed: _loadUsers, child: const Text('Refresh')),
           ],
         ),
       );
@@ -508,20 +525,23 @@ class DiscoverCardState extends State<DiscoverCard> {
     final top = _users[0];
     final second = _users.length > 1 ? _users[1] : null;
 
+    const cardInset = EdgeInsets.fromLTRB(6, 6, 6, 16);
+    const backCardInset = EdgeInsets.fromLTRB(14, 16, 14, 24);
+
     return Stack(
       children: [
         if (second != null)
           Positioned.fill(
             child: Padding(
-              padding: const EdgeInsets.only(top: 10, left: 8, right: 8),
-              child: Opacity(
-                opacity: 0.7,
-                child: _buildCard(second),
-              ),
+              padding: backCardInset,
+              child: Opacity(opacity: 0.7, child: _buildCard(second)),
             ),
           ),
         Positioned.fill(
-          child: _buildCard(top, isTop: true),
+          child: Padding(
+            padding: cardInset,
+            child: _buildCard(top, isTop: true),
+          ),
         ),
       ],
     );
