@@ -121,13 +121,14 @@ class ChatConversationNotifier extends Notifier<ChatConversationState> {
   bool _initialized = false;
   String? _currentUserId;
   final ChatSessionArgs _args;
+  late final ChatSocketService _socketService;
 
   ApiClient get _apiClient => ref.read(apiClientProvider);
   UserSessionService get _session => ref.read(userSessionServiceProvider);
-  ChatSocketService get _socket => ref.read(chatSocketServiceProvider);
 
   @override
   ChatConversationState build() {
+    _socketService = ref.read(chatSocketServiceProvider);
     ref.onDispose(disposeResources);
 
     return ChatConversationState(
@@ -160,7 +161,7 @@ class ChatConversationNotifier extends Notifier<ChatConversationState> {
   }
 
   void onTextChanged(String value) {
-    if (!_socket.isConnected) return;
+    if (!_socketService.isConnected) return;
 
     if (value.trim().isEmpty) {
       _stopTyping();
@@ -169,7 +170,7 @@ class ChatConversationNotifier extends Notifier<ChatConversationState> {
 
     if (!_typingActive) {
       _typingActive = true;
-      _socket.sendTyping(
+      _socketService.sendTyping(
         conversationId: _args.conversationId,
         receiverId: _args.participantId,
       );
@@ -212,8 +213,8 @@ class ChatConversationNotifier extends Notifier<ChatConversationState> {
     state = state.copyWith(messages: [...state.messages, optimistic]);
 
     try {
-      if (_socket.isConnected) {
-        final ack = await _socket.sendMessage(
+      if (_socketService.isConnected) {
+        final ack = await _socketService.sendMessage(
           senderId: senderId,
           receiverId: _args.participantId,
           conversationId: _args.conversationId,
@@ -334,7 +335,7 @@ class ChatConversationNotifier extends Notifier<ChatConversationState> {
     final latestIncoming = _latestIncomingMessage();
     if (latestIncoming == null) return;
 
-    _socket.markMessageSeen(
+    _socketService.markMessageSeen(
       conversationId: _args.conversationId,
       messageId: latestIncoming.id,
       receiverId: _args.participantId,
@@ -345,13 +346,13 @@ class ChatConversationNotifier extends Notifier<ChatConversationState> {
     final token = await _secureStorage.read(key: _tokenKey);
     if (token == null || token.trim().isEmpty) return;
 
-    _socket.connect(
+    _socketService.connect(
       baseUrl: ApiEndpoints.baseUrl,
       token: token,
       handlers: SocketEventHandlers(
         onConnected: () {
           state = state.copyWith(socketConnected: true);
-          _socket.joinChat(
+          _socketService.joinChat(
             conversationId: _args.conversationId,
             userId: _currentUserId,
           );
@@ -478,7 +479,7 @@ class ChatConversationNotifier extends Notifier<ChatConversationState> {
         }
       }
 
-      _socket.markMessageSeen(
+      _socketService.markMessageSeen(
         conversationId: _args.conversationId,
         messageId: incoming.id,
         receiverId: _args.participantId,
@@ -591,7 +592,7 @@ class ChatConversationNotifier extends Notifier<ChatConversationState> {
     if (!_typingActive) return;
     _typingActive = false;
 
-    _socket.stopTyping(
+    _socketService.stopTyping(
       conversationId: _args.conversationId,
       receiverId: _args.participantId,
     );
@@ -629,11 +630,11 @@ class ChatConversationNotifier extends Notifier<ChatConversationState> {
     _stopTyping();
     _historySyncTimer?.cancel();
     _historySyncTimer = null;
-    _socket.leaveChat(
+    _socketService.leaveChat(
       conversationId: _args.conversationId,
       userId: _currentUserId,
     );
-    _socket.dispose();
+    _socketService.dispose();
   }
 }
 
