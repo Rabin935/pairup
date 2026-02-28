@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pairup/core/api/api_client.dart';
 import 'package:pairup/core/api/api_endpoint.dart';
+import 'package:pairup/core/localization/app_localizations.dart';
 import 'package:pairup/features/chat/domain/entities/chat_entities.dart';
 import 'package:pairup/features/chat/presentation/pages/conversation_chat_screen.dart';
 import 'package:pairup/features/chat/presentation/providers/chat_provider.dart';
 import 'package:pairup/features/chat/presentation/state/chat_state.dart';
 import 'package:pairup/features/chat/presentation/view_model/chat_viewmodel.dart';
+import 'package:pairup/features/notification/presentation/pages/notification_screen.dart';
+import 'package:pairup/features/notification/presentation/view_model/notification_viewmodel.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
   const ChatScreen({super.key});
@@ -25,6 +28,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     _pageController = PageController(initialPage: _selectedTabIndex);
     Future.microtask(() {
       ref.read(chatViewModelProvider.notifier).loadChatOverview();
+      ref
+          .read(notificationViewModelProvider.notifier)
+          .loadNotifications(showLoading: false);
     });
   }
 
@@ -175,6 +181,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     List<MatchRequestEntity> requests,
     List<String> processingRequestKeys,
   ) {
+    final l10n = context.l10n;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return RefreshIndicator(
       onRefresh: _refresh,
       child: requests.isEmpty
@@ -185,8 +194,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   height: 520,
                   child: _buildEmptyState(
                     icon: Icons.favorite_border,
-                    title: 'No match requests',
-                    subtitle: 'New likes and invites will appear here.',
+                    title: l10n.tr('no_match_requests'),
+                    subtitle: l10n.tr('new_likes_invites_here'),
                   ),
                 ),
               ],
@@ -216,9 +225,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                     vertical: 10,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: isDark ? const Color(0xFF1C2028) : Colors.white,
                     borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: const Color(0xFFECECEC)),
+                    border: Border.all(
+                      color: isDark
+                          ? const Color(0xFF333843)
+                          : const Color(0xFFECECEC),
+                    ),
                   ),
                   child: Column(
                     children: [
@@ -327,6 +340,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   Widget _buildNewRequestPage(List<NewRequestEntity> newRequests) {
+    final l10n = context.l10n;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return RefreshIndicator(
       onRefresh: _refresh,
       child: newRequests.isEmpty
@@ -337,8 +353,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   height: 520,
                   child: _buildEmptyState(
                     icon: Icons.auto_awesome_outlined,
-                    title: 'No new requests',
-                    subtitle: 'Your new matches will appear here.',
+                    title: l10n.tr('no_new_requests'),
+                    subtitle: l10n.tr('new_matches_here'),
                   ),
                 ),
               ],
@@ -373,9 +389,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                       vertical: 10,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: isDark ? const Color(0xFF1C2028) : Colors.white,
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: const Color(0xFFECECEC)),
+                      border: Border.all(
+                        color: isDark
+                            ? const Color(0xFF333843)
+                            : const Color(0xFFECECEC),
+                      ),
                     ),
                     child: Row(
                       children: [
@@ -424,6 +444,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   Widget _buildChatPage(List<ChatThreadEntity> chats) {
+    final l10n = context.l10n;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return RefreshIndicator(
       onRefresh: _refresh,
       child: chats.isEmpty
@@ -434,8 +457,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   height: 520,
                   child: _buildEmptyState(
                     icon: Icons.chat_bubble_outline,
-                    title: 'No chats yet',
-                    subtitle: 'Start a match to begin chatting.',
+                    title: l10n.tr('no_chats_yet'),
+                    subtitle: l10n.tr('start_match_chat'),
                   ),
                 ),
               ],
@@ -465,9 +488,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                       vertical: 10,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: isDark ? const Color(0xFF1C2028) : Colors.white,
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: const Color(0xFFECECEC)),
+                      border: Border.all(
+                        color: isDark
+                            ? const Color(0xFF333843)
+                            : const Color(0xFFECECEC),
+                      ),
                     ),
                     child: Row(
                       children: [
@@ -551,36 +578,97 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final state = ref.watch(chatViewModelProvider);
+    final notificationState = ref.watch(notificationViewModelProvider);
     final overview = state.overview;
     final unreadChatCount = overview.chats.fold<int>(
       0,
       (total, chat) => total + chat.unreadCount,
     );
+    final unreadNotificationCount = notificationState.unreadCount;
     final hasData =
         overview.matchRequests.isNotEmpty ||
         overview.newRequests.isNotEmpty ||
         overview.chats.isNotEmpty;
 
     final tabs = [
-      _TabData(label: 'Match Requests', count: overview.matchRequests.length),
-      _TabData(label: 'New Requests', count: overview.newRequests.length),
-      _TabData(label: 'Chats', count: unreadChatCount),
+      _TabData(
+        label: l10n.tr('match_requests'),
+        count: overview.matchRequests.length,
+      ),
+      _TabData(
+        label: l10n.tr('new_requests'),
+        count: overview.newRequests.length,
+      ),
+      _TabData(label: l10n.tr('messages'), count: unreadChatCount),
     ];
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
-        title: const Text(
-          'Chats',
+        title: Text(
+          l10n.tr('messages'),
           style: TextStyle(
-            color: Colors.black,
+            color: isDark ? Colors.white : Colors.black,
             fontWeight: FontWeight.bold,
             fontSize: 24,
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const NotificationScreen()),
+              );
+              if (!mounted) return;
+              ref
+                  .read(notificationViewModelProvider.notifier)
+                  .loadNotifications(showLoading: false);
+            },
+            icon: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Icon(
+                  Icons.notifications_none,
+                  color: isDark ? Colors.white : Colors.black,
+                ),
+                if (unreadNotificationCount > 0)
+                  Positioned(
+                    right: -7,
+                    top: -4,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 5,
+                        vertical: 1,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE53935),
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                      constraints: const BoxConstraints(minWidth: 16),
+                      child: Text(
+                        unreadNotificationCount > 99
+                            ? '99+'
+                            : unreadNotificationCount.toString(),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            tooltip: l10n.tr('notifications'),
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -776,14 +864,19 @@ class _TabButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final backgroundColor = selected
         ? const Color(0xFF5E35B1)
-        : const Color(0xFFF2F2F2);
-    final textColor = selected ? Colors.white : const Color(0xFF444444);
-    final badgeBg = selected ? Colors.white : const Color(0xFFE3E3E3);
+        : (isDark ? const Color(0xFF2A2E38) : const Color(0xFFF2F2F2));
+    final textColor = selected
+        ? Colors.white
+        : (isDark ? Colors.white70 : const Color(0xFF444444));
+    final badgeBg = selected
+        ? Colors.white
+        : (isDark ? const Color(0xFF383D49) : const Color(0xFFE3E3E3));
     final badgeText = selected
         ? const Color(0xFF5E35B1)
-        : const Color(0xFF555555);
+        : (isDark ? Colors.white70 : const Color(0xFF555555));
 
     return InkWell(
       onTap: onTap,
