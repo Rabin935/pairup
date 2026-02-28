@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pairup/core/services/permission/permission_service.dart';
 import 'package:pairup/core/services/storage/user_session_service.dart';
 import 'package:pairup/features/auth/presentation/pages/login_screen.dart';
 import 'package:pairup/features/splash/presentation/pages/navigation_botton_screen.dart';
@@ -81,6 +82,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   Future<void> _navigateToNext() async {
     await Future.delayed(const Duration(seconds: 3));
+    if (!mounted) return;
+    await ref
+        .read(permissionServiceProvider)
+        .requestStartupPermissions(context);
     if (!mounted) return;
 
     // Check if user is already logged in
