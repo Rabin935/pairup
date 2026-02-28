@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pairup/core/api/api_client.dart';
+import 'package:pairup/core/localization/app_localizations.dart';
+import 'package:pairup/core/localization/locale_provider.dart';
 import 'package:pairup/core/services/storage/user_session_service.dart';
+import 'package:pairup/core/theme/theme_mode_provider.dart';
 import 'package:pairup/core/utils/snackbar_helper.dart';
 import 'package:pairup/features/auth/presentation/pages/login_screen.dart';
 import 'package:pairup/features/auth/presentation/view_model/auth_viewmodel.dart';
@@ -11,7 +14,8 @@ class ProfileSettingsScreen extends ConsumerStatefulWidget {
   const ProfileSettingsScreen({super.key});
 
   @override
-  ConsumerState<ProfileSettingsScreen> createState() => _ProfileSettingsScreenState();
+  ConsumerState<ProfileSettingsScreen> createState() =>
+      _ProfileSettingsScreenState();
 }
 
 class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
@@ -72,7 +76,8 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
       final connectionsBody = responses[2].data as Map<String, dynamic>;
 
       final settings = (settingsBody['data'] as Map<String, dynamic>?) ?? {};
-      final notification = (settings['notificationPreferences'] as Map<String, dynamic>?) ?? {};
+      final notification =
+          (settings['notificationPreferences'] as Map<String, dynamic>?) ?? {};
       final privacy = (settings['privacy'] as Map<String, dynamic>?) ?? {};
 
       if (!mounted) return;
@@ -105,7 +110,10 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
     final newPassword = _newPasswordController.text.trim();
 
     if (currentPassword.isEmpty || newPassword.length < 6) {
-      showCustomErrorSnackBar(context, 'Enter current password and new password (min 6 chars)');
+      showCustomErrorSnackBar(
+        context,
+        'Enter current password and new password (min 6 chars)',
+      );
       return;
     }
 
@@ -113,10 +121,7 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
     try {
       final response = await _apiClient.patch(
         '/api/users/settings/password',
-        data: {
-          'currentPassword': currentPassword,
-          'newPassword': newPassword,
-        },
+        data: {'currentPassword': currentPassword, 'newPassword': newPassword},
       );
 
       final body = response.data as Map<String, dynamic>;
@@ -127,7 +132,10 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
         _newPasswordController.clear();
         showCustomSuccessSnackBar(context, 'Password changed successfully');
       } else {
-        showCustomErrorSnackBar(context, _text(body['message'], 'Unable to change password'));
+        showCustomErrorSnackBar(
+          context,
+          _text(body['message'], 'Unable to change password'),
+        );
       }
     } catch (_) {
       if (!mounted) return;
@@ -142,7 +150,10 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
   Future<void> _setVisibility(bool value) async {
     setState(() => _onlineVisibility = value);
     try {
-      await _apiClient.patch('/api/users/settings/visibility', data: {'onlineVisibility': value});
+      await _apiClient.patch(
+        '/api/users/settings/visibility',
+        data: {'onlineVisibility': value},
+      );
       if (!mounted) return;
       showCustomSuccessSnackBar(context, 'Visibility updated');
     } catch (_) {
@@ -217,9 +228,14 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Delete Account'),
-          content: const Text('Are you sure you want to permanently delete your account?'),
+          content: const Text(
+            'Are you sure you want to permanently delete your account?',
+          ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancel'),
+            ),
             TextButton(
               onPressed: () => Navigator.pop(context, true),
               child: const Text('Delete', style: TextStyle(color: Colors.red)),
@@ -249,7 +265,10 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
           (route) => false,
         );
       } else {
-        showCustomErrorSnackBar(context, _text(body['message'], 'Unable to delete account'));
+        showCustomErrorSnackBar(
+          context,
+          _text(body['message'], 'Unable to delete account'),
+        );
       }
     } catch (_) {
       if (!mounted) return;
@@ -261,14 +280,22 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
     }
   }
 
-  Widget _buildSectionCard({required String title, required List<Widget> children}) {
+  Widget _buildSectionCard({
+    required String title,
+    required List<Widget> children,
+  }) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE9E9E9)),
+        border: Border.all(
+          color: isDark ? const Color(0xFF343844) : const Color(0xFFE9E9E9),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -286,10 +313,18 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final currentThemeMode = ref.watch(themeModeProvider);
+    final themeNotifier = ref.read(themeModeProvider.notifier);
+    final selectedLocale = ref.watch(localeProvider);
+    final localeNotifier = ref.read(localeProvider.notifier);
+    final fallbackCode = Localizations.localeOf(context).languageCode;
+    final currentLanguageCode =
+        selectedLocale?.languageCode ??
+        (fallbackCode == 'ne' || fallbackCode == 'en' ? fallbackCode : 'en');
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
+      appBar: AppBar(title: Text(l10n.tr('settings'))),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
@@ -298,18 +333,85 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                 padding: const EdgeInsets.all(16),
                 children: [
                   _buildSectionCard(
+                    title: l10n.tr('appearance'),
+                    children: [
+                      Text(
+                        'Choose your preferred app theme. Changes apply immediately.',
+                      ),
+                      const SizedBox(height: 10),
+                      SegmentedButton<ThemeMode>(
+                        showSelectedIcon: false,
+                        segments: [
+                          ButtonSegment(
+                            value: ThemeMode.system,
+                            icon: Icon(Icons.phone_android_outlined),
+                            label: Text(l10n.tr('system')),
+                          ),
+                          ButtonSegment(
+                            value: ThemeMode.light,
+                            icon: Icon(Icons.light_mode_outlined),
+                            label: Text(l10n.tr('light')),
+                          ),
+                          ButtonSegment(
+                            value: ThemeMode.dark,
+                            icon: Icon(Icons.dark_mode_outlined),
+                            label: Text(l10n.tr('dark')),
+                          ),
+                        ],
+                        selected: <ThemeMode>{currentThemeMode},
+                        onSelectionChanged: (selection) {
+                          if (selection.isEmpty) return;
+                          themeNotifier.setThemeMode(selection.first);
+                        },
+                      ),
+                    ],
+                  ),
+                  _buildSectionCard(
+                    title: l10n.tr('language'),
+                    children: [
+                      Text(
+                        'Choose your preferred app language. Changes apply immediately.',
+                      ),
+                      const SizedBox(height: 10),
+                      SegmentedButton<String>(
+                        showSelectedIcon: false,
+                        segments: [
+                          ButtonSegment(
+                            value: 'en',
+                            icon: const Icon(Icons.language_outlined),
+                            label: Text(l10n.tr('english')),
+                          ),
+                          ButtonSegment(
+                            value: 'ne',
+                            icon: const Icon(Icons.translate_outlined),
+                            label: Text(l10n.tr('nepali')),
+                          ),
+                        ],
+                        selected: <String>{currentLanguageCode},
+                        onSelectionChanged: (selection) {
+                          if (selection.isEmpty) return;
+                          localeNotifier.setLocale(Locale(selection.first));
+                        },
+                      ),
+                    ],
+                  ),
+                  _buildSectionCard(
                     title: 'Change Password',
                     children: [
                       TextField(
                         controller: _currentPasswordController,
                         obscureText: true,
-                        decoration: const InputDecoration(labelText: 'Current Password'),
+                        decoration: const InputDecoration(
+                          labelText: 'Current Password',
+                        ),
                       ),
                       const SizedBox(height: 10),
                       TextField(
                         controller: _newPasswordController,
                         obscureText: true,
-                        decoration: const InputDecoration(labelText: 'New Password'),
+                        decoration: const InputDecoration(
+                          labelText: 'New Password',
+                        ),
                       ),
                       const SizedBox(height: 12),
                       Align(
@@ -416,13 +518,17 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                         ..._connections.map((item) {
                           final user = item['user'] as Map<String, dynamic>?;
                           final userId = _text(user?['id']);
-                          final name = '${_text(user?['firstname'], 'User')} ${_text(user?['lastname'])}'.trim();
+                          final name =
+                              '${_text(user?['firstname'], 'User')} ${_text(user?['lastname'])}'
+                                  .trim();
                           return ListTile(
                             contentPadding: EdgeInsets.zero,
                             leading: const Icon(Icons.person_outline),
                             title: Text(name.isEmpty ? 'User' : name),
                             trailing: TextButton(
-                              onPressed: userId.isEmpty ? null : () => _blockUser(userId),
+                              onPressed: userId.isEmpty
+                                  ? null
+                                  : () => _blockUser(userId),
                               child: const Text('Block'),
                             ),
                           );
@@ -444,7 +550,9 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
                             leading: const Icon(Icons.block),
                             title: Text(name),
                             trailing: TextButton(
-                              onPressed: id.isEmpty ? null : () => _unblockUser(id),
+                              onPressed: id.isEmpty
+                                  ? null
+                                  : () => _unblockUser(id),
                               child: const Text('Unblock'),
                             ),
                           );

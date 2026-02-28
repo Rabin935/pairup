@@ -37,7 +37,15 @@ class _ProfileViewEditScreenState extends State<ProfileViewEditScreen> {
   List<String> _interests = [];
   bool _isSaving = false;
 
-  final List<String> _countryCodes = const ['+977', '+91', '+1', '+44', '+86', '+61', '+81'];
+  final List<String> _countryCodes = const [
+    '+977',
+    '+91',
+    '+1',
+    '+44',
+    '+86',
+    '+61',
+    '+81',
+  ];
 
   String _asText(dynamic value, [String fallback = '']) {
     final text = (value ?? '').toString().trim();
@@ -47,18 +55,33 @@ class _ProfileViewEditScreenState extends State<ProfileViewEditScreen> {
   @override
   void initState() {
     super.initState();
-    _firstNameController = TextEditingController(text: _asText(widget.userData['firstname']));
-    _lastNameController = TextEditingController(text: _asText(widget.userData['lastname']));
-    _emailController = TextEditingController(text: _asText(widget.userData['email']));
-    _ageController = TextEditingController(text: _asText(widget.userData['age']));
-    _locationController = TextEditingController(text: _asText(widget.userData['location']));
-    _bioController = TextEditingController(text: _asText(widget.userData['bio']));
+    _firstNameController = TextEditingController(
+      text: _asText(widget.userData['firstname']),
+    );
+    _lastNameController = TextEditingController(
+      text: _asText(widget.userData['lastname']),
+    );
+    _emailController = TextEditingController(
+      text: _asText(widget.userData['email']),
+    );
+    _ageController = TextEditingController(
+      text: _asText(widget.userData['age']),
+    );
+    _locationController = TextEditingController(
+      text: _asText(widget.userData['location']),
+    );
+    _bioController = TextEditingController(
+      text: _asText(widget.userData['bio']),
+    );
     _interestInputController = TextEditingController();
     _phoneNumberController = TextEditingController();
 
     final rawInterests = widget.userData['interests'];
     if (rawInterests is List) {
-      _interests = rawInterests.map((item) => item.toString().trim()).where((e) => e.isNotEmpty).toList();
+      _interests = rawInterests
+          .map((item) => item.toString().trim())
+          .where((e) => e.isNotEmpty)
+          .toList();
     }
 
     final rawNumber = _asText(widget.userData['number']);
@@ -72,10 +95,16 @@ class _ProfileViewEditScreenState extends State<ProfileViewEditScreen> {
     }
 
     final parsedGender = _asText(widget.userData['gender']).toLowerCase();
-    _gender = ['male', 'female', 'other'].contains(parsedGender) ? parsedGender : null;
+    _gender = ['male', 'female', 'other'].contains(parsedGender)
+        ? parsedGender
+        : null;
 
-    final parsedInterestedIn = _asText(widget.userData['interestedIn']).toLowerCase();
-    _interestedIn = ['male', 'female'].contains(parsedInterestedIn) ? parsedInterestedIn : null;
+    final parsedInterestedIn = _asText(
+      widget.userData['interestedIn'],
+    ).toLowerCase();
+    _interestedIn = ['male', 'female'].contains(parsedInterestedIn)
+        ? parsedInterestedIn
+        : null;
   }
 
   @override
@@ -97,14 +126,52 @@ class _ProfileViewEditScreenState extends State<ProfileViewEditScreen> {
     return _asText(widget.userData['image']);
   }
 
-  Future<void> _pickImage() async {
-    final image = await _imagePicker.pickImage(source: ImageSource.gallery, imageQuality: 80);
+  Future<void> _pickImage(ImageSource source) async {
+    final image = await _imagePicker.pickImage(
+      source: source,
+      imageQuality: 80,
+    );
     if (image == null) return;
 
     setState(() {
       _selectedImage = image;
       _removeProfileImage = false;
     });
+  }
+
+  Future<void> _showImageSourcePicker() async {
+    await showModalBottomSheet<void>(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (sheetContext) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo_library_outlined),
+                title: const Text('Choose from gallery'),
+                onTap: () async {
+                  Navigator.pop(sheetContext);
+                  await _pickImage(ImageSource.gallery);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.camera_alt_outlined),
+                title: const Text('Use camera'),
+                onTap: () async {
+                  Navigator.pop(sheetContext);
+                  await _pickImage(ImageSource.camera);
+                },
+              ),
+              const SizedBox(height: 4),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   void _removeImage() {
@@ -140,7 +207,10 @@ class _ProfileViewEditScreenState extends State<ProfileViewEditScreen> {
     try {
       final userId = _asText(widget.userData['_id']);
       if (userId.isEmpty) {
-        showCustomErrorSnackBar(context, 'Unable to update profile: missing user id');
+        showCustomErrorSnackBar(
+          context,
+          'Unable to update profile: missing user id',
+        );
         setState(() => _isSaving = false);
         return;
       }
@@ -153,7 +223,8 @@ class _ProfileViewEditScreenState extends State<ProfileViewEditScreen> {
         return;
       }
 
-      final normalizedPhone = '$_selectedCountryCode${_phoneNumberController.text.trim()}';
+      final normalizedPhone =
+          '$_selectedCountryCode${_phoneNumberController.text.trim()}';
 
       final payload = <String, dynamic>{
         'location': _locationController.text.trim(),
@@ -167,12 +238,18 @@ class _ProfileViewEditScreenState extends State<ProfileViewEditScreen> {
         payload['interestedIn'] = _interestedIn;
       }
 
-      final completeResponse = await _apiClient.put('/api/users/update-profile', data: payload);
+      final completeResponse = await _apiClient.put(
+        '/api/users/update-profile',
+        data: payload,
+      );
       final completeBody = completeResponse.data as Map<String, dynamic>;
 
       if (completeBody['success'] != true) {
         if (!mounted) return;
-        showCustomErrorSnackBar(context, _asText(completeBody['message'], 'Update failed'));
+        showCustomErrorSnackBar(
+          context,
+          _asText(completeBody['message'], 'Update failed'),
+        );
         setState(() => _isSaving = false);
         return;
       }
@@ -204,13 +281,21 @@ class _ProfileViewEditScreenState extends State<ProfileViewEditScreen> {
         showCustomSuccessSnackBar(context, 'Profile updated');
         Navigator.pop(context, true);
       } else {
-        showCustomErrorSnackBar(context, _asText(body['message']).isEmpty ? 'Update failed' : _asText(body['message']));
+        showCustomErrorSnackBar(
+          context,
+          _asText(body['message']).isEmpty
+              ? 'Update failed'
+              : _asText(body['message']),
+        );
       }
     } on DioException catch (e) {
       if (!mounted) return;
       final data = e.response?.data;
       if (data is Map<String, dynamic>) {
-        showCustomErrorSnackBar(context, _asText(data['message'], 'Unable to update profile'));
+        showCustomErrorSnackBar(
+          context,
+          _asText(data['message'], 'Unable to update profile'),
+        );
       } else {
         showCustomErrorSnackBar(context, 'Unable to update profile');
       }
@@ -227,9 +312,7 @@ class _ProfileViewEditScreenState extends State<ProfileViewEditScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('View & Edit Profile'),
-      ),
+      appBar: AppBar(title: const Text('View & Edit Profile')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -247,9 +330,17 @@ class _ProfileViewEditScreenState extends State<ProfileViewEditScreen> {
                           ? FileImage(File(_selectedImage!.path))
                           : (_removeProfileImage
                                 ? null
-                                : (_currentImageUrl.isNotEmpty ? NetworkImage(_currentImageUrl) : null)),
-                      child: (_selectedImage == null && (_removeProfileImage || _currentImageUrl.isEmpty))
-                          ? const Icon(Icons.person, size: 42, color: Color(0xFF7F3DDB))
+                                : (_currentImageUrl.isNotEmpty
+                                      ? NetworkImage(_currentImageUrl)
+                                      : null)),
+                      child:
+                          (_selectedImage == null &&
+                              (_removeProfileImage || _currentImageUrl.isEmpty))
+                          ? const Icon(
+                              Icons.person,
+                              size: 42,
+                              color: Color(0xFF7F3DDB),
+                            )
                           : null,
                     ),
                     const SizedBox(height: 10),
@@ -257,7 +348,7 @@ class _ProfileViewEditScreenState extends State<ProfileViewEditScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         TextButton.icon(
-                          onPressed: _pickImage,
+                          onPressed: _showImageSourcePicker,
                           icon: const Icon(Icons.photo_library_outlined),
                           label: const Text('Add / Change Image'),
                         ),
@@ -298,7 +389,12 @@ class _ProfileViewEditScreenState extends State<ProfileViewEditScreen> {
                       initialValue: _selectedCountryCode,
                       decoration: const InputDecoration(labelText: 'Code'),
                       items: _countryCodes
-                          .map((code) => DropdownMenuItem(value: code, child: Text(code)))
+                          .map(
+                            (code) => DropdownMenuItem(
+                              value: code,
+                              child: Text(code),
+                            ),
+                          )
                           .toList(),
                       onChanged: (value) {
                         if (value == null) return;
@@ -311,7 +407,9 @@ class _ProfileViewEditScreenState extends State<ProfileViewEditScreen> {
                     child: TextFormField(
                       controller: _phoneNumberController,
                       keyboardType: TextInputType.phone,
-                      decoration: const InputDecoration(labelText: 'Phone Number'),
+                      decoration: const InputDecoration(
+                        labelText: 'Phone Number',
+                      ),
                     ),
                   ),
                 ],
@@ -369,7 +467,10 @@ class _ProfileViewEditScreenState extends State<ProfileViewEditScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF7F3DDB),
                     ),
-                    child: const Text('Add', style: TextStyle(color: Colors.white)),
+                    child: const Text(
+                      'Add',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),
@@ -400,7 +501,9 @@ class _ProfileViewEditScreenState extends State<ProfileViewEditScreen> {
                   onPressed: _isSaving ? null : _saveProfile,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF7F3DDB),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                   child: _isSaving
                       ? const SizedBox(
@@ -408,12 +511,17 @@ class _ProfileViewEditScreenState extends State<ProfileViewEditScreen> {
                           height: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
                           ),
                         )
                       : const Text(
                           'Save Changes',
-                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                 ),
               ),
