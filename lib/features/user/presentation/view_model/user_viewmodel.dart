@@ -21,6 +21,7 @@ class UserViewmodel extends Notifier<UserState> {
   UserState build() {
     _getAllUserUsecase = ref.read(getAllUserUsecaseProvider);
     _createUserUsecase = ref.read(createUserUsecaseProvider);
+    _updateUserUsecase = ref.read(updateUserUsecaseProvider);
     _deleteUserUsecase = ref.read(deleteUserUsecaseProvider);
     _getUserByIdUsecase = ref.read(getUserByIdUsecaseProvider);
 
@@ -29,8 +30,6 @@ class UserViewmodel extends Notifier<UserState> {
 
   Future<void> getAllUsers() async {
     state = state.copyWith(status: UserStatus.loading);
-
-    await Future.delayed(Duration(seconds: 2));
 
     final result = await _getAllUserUsecase();
 
