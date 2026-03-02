@@ -1,11 +1,11 @@
-class Profile {
+class ProfileEntity {
   final String name;
   final int age;
   final String occupation;
   final String location;
   final String imageUrl;
 
-  Profile({
+  const ProfileEntity({
     required this.name,
     required this.age,
     required this.occupation,

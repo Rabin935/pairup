@@ -11,7 +11,7 @@ class ApiEndpoints {
 
   static const bool isPhysicalDevice = false;
 
-  static const String comIpAddress = "192.168.1.1";
+  static const String comIpAddress = "192.168.18.155";
   static const int serverPort = 5000;
 
   static String get baseUrl {

@@ -1,38 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pairup/features/auth/presentation/pages/login_screen.dart';
 import 'package:pairup/features/auth/presentation/pages/signup_screen.dart';
-import 'package:pairup/features/splash/presentation/models/onboarding_model.dart';
+import 'package:pairup/features/splash/domain/entities/onboarding_page_entity.dart';
+import 'package:pairup/features/splash/presentation/view_models/onboarding_viewmodel.dart';
 
-final List<OnboardingPageModel> onboardingPages = [
-  OnboardingPageModel(
-    imageUrl: 'assets/images/onboardimage1.jpg',
-    title: 'Meet New People With Real Intentions',
-    description:
-        'Discover meaningful profiles, chat naturally, and build genuine connections.',
-  ),
-  OnboardingPageModel(
-    imageUrl: 'assets/images/onboardimage2.jpg',
-    title: 'Match Beyond Just Photos',
-    description:
-        'Find users by interests, lifestyle, and compatibility so every match feels relevant.',
-  ),
-  OnboardingPageModel(
-    imageUrl: 'assets/images/onboardimage3.jpg',
-    title: 'Start Your Next Story On PairUp',
-    description:
-        'Your next close connection can begin with a single swipe and a simple hello.',
-  ),
-];
-
-class OnboardingScreen extends StatefulWidget {
+class OnboardingScreen extends ConsumerStatefulWidget {
   final VoidCallback? onComplete;
 
   const OnboardingScreen({super.key, this.onComplete});
 
   @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
+  ConsumerState<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
+class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
@@ -49,8 +31,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     ).pushReplacement(MaterialPageRoute(builder: (_) => const SignupScreen()));
   }
 
-  void _next() {
-    if (_currentPage < onboardingPages.length - 1) {
+  void _skipOnboarding() {
+    widget.onComplete?.call();
+    Navigator.of(
+      context,
+    ).pushReplacement(MaterialPageRoute(builder: (_) => const LoginScreen()));
+  }
+
+  void _next(int totalPages) {
+    if (_currentPage < totalPages - 1) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 320),
         curve: Curves.easeOutCubic,
@@ -62,6 +51,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final onboardingPages = ref.watch(onboardingPagesProvider);
+
+    if (onboardingPages.isEmpty) {
+      return const Scaffold(
+        body: Center(child: Text('No onboarding data available.')),
+      );
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xFFF4FAFD),
       body: SafeArea(
@@ -90,7 +87,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     borderRadius: BorderRadius.circular(999),
                   ),
                 ),
-                onPressed: _navigateToSignUp,
+                onPressed: _skipOnboarding,
                 child: const Text(
                   'Skip',
                   style: TextStyle(fontWeight: FontWeight.w700),
@@ -115,7 +112,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     width: 56,
                     child: FloatingActionButton(
                       elevation: 0,
-                      onPressed: _next,
+                      onPressed: () => _next(onboardingPages.length),
                       backgroundColor: const Color(0xFFEE6C4D),
                       child: const Icon(
                         Icons.arrow_forward_rounded,
@@ -148,7 +145,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 }
 
 class _OnboardingPage extends StatelessWidget {
-  final OnboardingPageModel page;
+  final OnboardingPageEntity page;
 
   const _OnboardingPage({required this.page});
 

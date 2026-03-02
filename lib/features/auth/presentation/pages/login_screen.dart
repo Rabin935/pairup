@@ -5,6 +5,7 @@ import 'package:pairup/core/utils/snackbar_helper.dart';
 import 'package:pairup/features/auth/presentation/pages/signup_screen.dart';
 import 'package:pairup/features/auth/presentation/state/auth_state.dart';
 import 'package:pairup/features/auth/presentation/view_model/auth_viewmodel.dart';
+import 'package:pairup/features/auth/presentation/widgets/auth_form_widgets.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -16,14 +17,20 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _isPasswordVisible = false;
   bool _isSubmitting = false;
-  final _formkey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
-  // ✅ Controllers (REQUIRED)
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   Future<void> _handleLogin() async {
-    if (!_formkey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) return;
     if (_isSubmitting) return;
 
     final email = _emailController.text.trim();
@@ -70,132 +77,109 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     ).push(MaterialPageRoute(builder: (_) => const SignupScreen()));
   }
 
-  static const Color primaryPurple = Color(0xFF8A2BE2);
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 40.0),
-        child: Form(
-          key: _formkey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Text(
-                "Login to PairUp",
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-
-              const SizedBox(height: 40),
-              Image.asset('assets/images/pairuplogo.png', height: 90),
-              const SizedBox(height: 60),
-
-              // ✅ Email
-              TextFormField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  labelText: "Email",
-                  hintText: "example@gmail.com",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Email is required';
-                  }
-                  if (!value.contains('@')) {
-                    return 'Enter a valid email';
-                  }
-                  return null;
-                },
-              ),
-
-              const SizedBox(height: 20),
-
-              // ✅ Password
-              TextFormField(
-                controller: _passwordController,
-                obscureText: !_isPasswordVisible,
-                decoration: InputDecoration(
-                  labelText: "Password",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _isPasswordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
+    return AuthPageBackground(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 14),
+            const AuthHeader(
+              title: 'Login to PairUp',
+              subtitle:
+                  'Welcome back. Continue matching and chatting with your circle.',
+            ),
+            const SizedBox(height: 26),
+            AuthCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  TextFormField(
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
+                    decoration: authInputDecoration(
+                      labelText: 'Email',
+                      hintText: 'example@gmail.com',
+                      icon: Icons.mail_outline,
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Email is required';
+                      }
+
+                      final email = value.trim();
+                      if (!RegExp(
+                        r'^[\w\.-]+@[\w\.-]+\.[A-Za-z]{2,}$',
+                      ).hasMatch(email)) {
+                        return 'Enter a valid email';
+                      }
+                      return null;
                     },
                   ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Password is required';
-                  }
-                  if (value.length < 6) {
-                    return 'Password too short';
-                  }
-                  return null;
-                },
-              ),
-
-              const SizedBox(height: 20),
-
-              // ✅ Login Button
-              ElevatedButton(
-                onPressed: _isSubmitting ? null : _handleLogin,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: primaryPurple,
-                  minimumSize: const Size(double.infinity, 50),
-                ),
-                child: _isSubmitting
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2.2,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.white,
-                          ),
+                  const SizedBox(height: 14),
+                  TextFormField(
+                    controller: _passwordController,
+                    obscureText: !_isPasswordVisible,
+                    textInputAction: TextInputAction.done,
+                    onFieldSubmitted: (_) => _handleLogin(),
+                    decoration: authInputDecoration(
+                      labelText: 'Password',
+                      hintText: 'Enter your password',
+                      icon: Icons.lock_outline,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                         ),
-                      )
-                    : const Text(
-                        'Login',
-                        style: TextStyle(fontSize: 18, color: Colors.white),
-                      ),
-              ),
-
-              const SizedBox(height: 30),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Not a member yet?"),
-                  TextButton(
-                    onPressed: _navigateToRegistration,
-                    child: const Text(
-                      "Join now",
-                      style: TextStyle(
-                        color: primaryPurple,
-                        fontWeight: FontWeight.bold,
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
                       ),
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Password is required';
+                      }
+                      if (value.length < 6) {
+                        return 'Password must be at least 6 characters';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  AuthPrimaryButton(
+                    label: 'Login',
+                    onPressed: _handleLogin,
+                    isLoading: _isSubmitting,
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Not a member yet?'),
+                TextButton(
+                  onPressed: _navigateToRegistration,
+                  child: const Text(
+                    'Join now',
+                    style: TextStyle(
+                      color: AuthPalette.primary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

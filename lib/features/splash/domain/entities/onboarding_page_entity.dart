@@ -1,9 +1,9 @@
-class OnboardingPageModel {
-  final String imageUrl; // In a real app, this would be your asset path
+class OnboardingPageEntity {
+  final String imageUrl;
   final String title;
   final String description;
 
-  OnboardingPageModel({
+  const OnboardingPageEntity({
     required this.imageUrl,
     required this.title,
     required this.description,

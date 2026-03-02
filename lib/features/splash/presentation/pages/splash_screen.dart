@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pairup/core/services/permission/permission_service.dart';
 import 'package:pairup/core/services/storage/user_session_service.dart';
-import 'package:pairup/features/auth/presentation/pages/login_screen.dart';
 import 'package:pairup/features/splash/presentation/pages/navigation_botton_screen.dart';
+import 'package:pairup/features/splash/presentation/pages/onboarding_screen.dart';
 // Note: Ensure the path above is correct for your project structure
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -101,9 +101,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         (route) => false,
       );
     } else {
-      // Logged out: start from auth flow.
+      // Logged out: show onboarding flow first.
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const LoginScreen()),
+        MaterialPageRoute(builder: (_) => const OnboardingScreen()),
         (route) => false,
       );
     }
