@@ -60,19 +60,27 @@ class AuthViewModel extends Notifier<AuthState> {
 
   Future<void> login(String email, String password) async {
     state = state.copyWith(status: AuthStatus.loading);
+    try {
+      final result = await _loginUsecase(
+        LoginUsecaseParams(email: email, password: password),
+      );
 
-    final result = await _loginUsecase(
-      LoginUsecaseParams(email: email, password: password),
-    );
-
-    result.fold(
-      (failure) => state = state.copyWith(
+      result.fold(
+        (failure) => state = state.copyWith(
+          status: AuthStatus.error,
+          errorMessage: failure.message,
+        ),
+        (user) => state = state.copyWith(
+          status: AuthStatus.authenticated,
+          user: user,
+        ),
+      );
+    } catch (_) {
+      state = state.copyWith(
         status: AuthStatus.error,
-        errorMessage: failure.message,
-      ),
-      (user) =>
-          state = state.copyWith(status: AuthStatus.authenticated, user: user),
-    );
+        errorMessage: 'Unexpected error while logging in',
+      );
+    }
   }
 
   Future<void> getCurrentUser() async {

@@ -11,6 +11,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final GlobalKey<DiscoverCardState> _discoverKey = GlobalKey<DiscoverCardState>();
+
+  Future<void> _refreshDeck() async {
+    await _discoverKey.currentState?.refreshDeck();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,13 +25,23 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
-            children: const [
-              DiscoverAppBar(),
+            children: [
+              DiscoverAppBar(onRefresh: _refreshDeck),
               Expanded(
-                child: DiscoverCard(), // This expands to fill available space
+                child: DiscoverCard(key: _discoverKey),
               ),
-              ActionButton(),
-              SizedBox(height: 20),
+              ActionButton(
+                onPass: () {
+                  _discoverKey.currentState?.triggerPass();
+                },
+                onLike: () {
+                  _discoverKey.currentState?.triggerLike();
+                },
+                onDetails: () {
+                  _discoverKey.currentState?.triggerDetails();
+                },
+              ),
+              const SizedBox(height: 20),
             ],
           ),
         ),

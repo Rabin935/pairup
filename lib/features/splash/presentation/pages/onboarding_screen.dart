@@ -4,16 +4,14 @@ import 'package:pairup/features/auth/presentation/pages/signup_screen.dart';
 
 // --- Data Model for Onboarding Pages ---
 
-
 // --- List of Onboarding Pages (Matching your image) ---
 final List<OnboardingPageModel> onboardingPages = [
   OnboardingPageModel(
     imageUrl:
         'assets/images/onboardimage1.jpg', // Replace with your actual asset path
-    title: 'Chat with strangers and make them your partners.', 
+    title: 'Chat with strangers and make them your partners.',
     description:
         'Chat with strangers to know each other better and have a nice compatibility.',
-        
   ),
   OnboardingPageModel(
     imageUrl:
@@ -33,7 +31,9 @@ final List<OnboardingPageModel> onboardingPages = [
 
 // --- Main Onboarding Screen Widget ---
 class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({super.key, required Null Function() onComplete});
+  final VoidCallback? onComplete;
+
+  const OnboardingScreen({super.key, this.onComplete});
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
@@ -51,6 +51,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   // Function to navigate to the SignUpPage
   void _navigateToSignUp() {
+    widget.onComplete?.call();
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (context) => const SignupScreen()),
     );
@@ -75,6 +76,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             },
           ),
           // 2. Bottom Navigation/Controls
+          Positioned(
+            top: 46,
+            right: 20,
+            child: TextButton(
+              onPressed: _navigateToSignUp,
+              child: const Text(
+                'Skip',
+                style: TextStyle(
+                  color: Color(0xFF673AB7),
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ),
           Positioned(
             bottom: 40.0,
             left: 20.0,

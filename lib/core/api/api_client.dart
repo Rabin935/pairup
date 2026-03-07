@@ -106,6 +106,21 @@ class ApiClient {
     );
   }
 
+  // PATCH request
+  Future<Response> patch(
+    String path, {
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+  }) async {
+    return _dio.patch(
+      path,
+      data: data,
+      queryParameters: queryParameters,
+      options: options,
+    );
+  }
+
   // DELETE request
   Future<Response> delete(
     String path, {
@@ -128,10 +143,14 @@ class ApiClient {
     Options? options,
     ProgressCallback? onSendProgress,
   }) async {
+    final resolvedOptions = (options ?? Options()).copyWith(
+      contentType: Headers.multipartFormDataContentType,
+    );
+
     return _dio.post(
       path,
       data: formData,
-      options: options,
+      options: resolvedOptions,
       onSendProgress: onSendProgress,
     );
   }
