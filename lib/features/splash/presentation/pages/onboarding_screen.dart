@@ -1,35 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:pairup/features/splash/presentation/models/onboarding_model.dart';
 import 'package:pairup/features/auth/presentation/pages/signup_screen.dart';
+import 'package:pairup/features/splash/presentation/models/onboarding_model.dart';
 
-// --- Data Model for Onboarding Pages ---
-
-// --- List of Onboarding Pages (Matching your image) ---
 final List<OnboardingPageModel> onboardingPages = [
   OnboardingPageModel(
-    imageUrl:
-        'assets/images/onboardimage1.jpg', // Replace with your actual asset path
-    title: 'Chat with strangers and make them your partners.',
+    imageUrl: 'assets/images/onboardimage1.jpg',
+    title: 'Meet New People With Real Intentions',
     description:
-        'Chat with strangers to know each other better and have a nice compatibility.',
+        'Discover meaningful profiles, chat naturally, and build genuine connections.',
   ),
   OnboardingPageModel(
-    imageUrl:
-        'assets/images/onboardimage2.jpg', // Replace with your actual asset path
-    title: 'Make friends by connecting with world',
+    imageUrl: 'assets/images/onboardimage2.jpg',
+    title: 'Match Beyond Just Photos',
     description:
-        'You can connect with people around the world for doing messages with people and make connection with them',
+        'Find users by interests, lifestyle, and compatibility so every match feels relevant.',
   ),
   OnboardingPageModel(
-    imageUrl:
-        'assets/images/onboardimage3.jpg', // Replace with your actual asset path
-    title: 'Choose your partner from same internet',
+    imageUrl: 'assets/images/onboardimage3.jpg',
+    title: 'Start Your Next Story On PairUp',
     description:
-        'Chat with strangers by seeing the common interests to get connected with each other in better way',
+        'Your next close connection can begin with a single swipe and a simple hello.',
   ),
 ];
 
-// --- Main Onboarding Screen Widget ---
 class OnboardingScreen extends StatefulWidget {
   final VoidCallback? onComplete;
 
@@ -49,147 +42,180 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     super.dispose();
   }
 
-  // Function to navigate to the SignUpPage
   void _navigateToSignUp() {
     widget.onComplete?.call();
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => const SignupScreen()),
-    );
+    Navigator.of(
+      context,
+    ).pushReplacement(MaterialPageRoute(builder: (_) => const SignupScreen()));
+  }
+
+  void _next() {
+    if (_currentPage < onboardingPages.length - 1) {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 320),
+        curve: Curves.easeOutCubic,
+      );
+      return;
+    }
+    _navigateToSignUp();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          // 1. PageView for Swiping Onboarding Content
-          PageView.builder(
-            controller: _pageController,
-            itemCount: onboardingPages.length,
-            onPageChanged: (int page) {
-              setState(() {
-                _currentPage = page;
-              });
-            },
-            itemBuilder: (context, index) {
-              return OnboardingPage(page: onboardingPages[index]);
-            },
-          ),
-          // 2. Bottom Navigation/Controls
-          Positioned(
-            top: 46,
-            right: 20,
-            child: TextButton(
-              onPressed: _navigateToSignUp,
-              child: const Text(
-                'Skip',
-                style: TextStyle(
-                  color: Color(0xFF673AB7),
-                  fontWeight: FontWeight.w700,
+      backgroundColor: const Color(0xFFF4FAFD),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            PageView.builder(
+              controller: _pageController,
+              itemCount: onboardingPages.length,
+              onPageChanged: (page) => setState(() => _currentPage = page),
+              itemBuilder: (context, index) {
+                return _OnboardingPage(page: onboardingPages[index]);
+              },
+            ),
+            Positioned(
+              top: 10,
+              right: 16,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  foregroundColor: const Color(0xFF005F73),
+                  backgroundColor: Colors.white.withValues(alpha: 0.9),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 8,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                ),
+                onPressed: _navigateToSignUp,
+                child: const Text(
+                  'Skip',
+                  style: TextStyle(fontWeight: FontWeight.w700),
                 ),
               ),
             ),
-          ),
-          Positioned(
-            bottom: 40.0,
-            left: 20.0,
-            right: 20.0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Page Indicator Dots
-                Row(
-                  children: List.generate(
-                    onboardingPages.length,
-                    (index) => buildDot(index, context),
+            Positioned(
+              left: 20,
+              right: 20,
+              bottom: 26,
+              child: Row(
+                children: [
+                  Row(
+                    children: List.generate(
+                      onboardingPages.length,
+                      (index) => _buildDot(index),
+                    ),
                   ),
-                ),
-                // Forward/Next/Finish Button
-                FloatingActionButton(
-                  onPressed: () {
-                    if (_currentPage < onboardingPages.length - 1) {
-                      // Navigate to the next page
-                      _pageController.nextPage(
-                        duration: const Duration(milliseconds: 400),
-                        curve: Curves.easeIn,
-                      );
-                    } else {
-                      // **Final Screen: Navigate to SignUpPage**
-                      _navigateToSignUp();
-                    }
-                  },
-                  backgroundColor: const Color(
-                    0xFF673AB7,
-                  ), // Example color for the purple button
-                  shape: const CircleBorder(),
-                  child: const Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
+                  const Spacer(),
+                  SizedBox(
+                    height: 56,
+                    width: 56,
+                    child: FloatingActionButton(
+                      elevation: 0,
+                      onPressed: _next,
+                      backgroundColor: const Color(0xFFEE6C4D),
+                      child: const Icon(
+                        Icons.arrow_forward_rounded,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  // Helper Widget for the Page Indicator Dots
-  AnimatedContainer buildDot(int index, BuildContext context) {
+  Widget _buildDot(int index) {
+    final active = _currentPage == index;
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      margin: const EdgeInsets.only(right: 5),
-      height: 6,
-      width: _currentPage == index ? 20 : 6,
+      duration: const Duration(milliseconds: 220),
+      margin: const EdgeInsets.only(right: 6),
+      height: 8,
+      width: active ? 24 : 8,
       decoration: BoxDecoration(
-        color: _currentPage == index
-            ? const Color(0xFF673AB7) // Active dot color
-            : Colors.grey.shade300, // Inactive dot color
-        borderRadius: BorderRadius.circular(3),
+        color: active ? const Color(0xFFEE6C4D) : const Color(0xFFD4E5EB),
+        borderRadius: BorderRadius.circular(999),
       ),
     );
   }
 }
 
-// --- Single Onboarding Page Content Widget ---
-class OnboardingPage extends StatelessWidget {
+class _OnboardingPage extends StatelessWidget {
   final OnboardingPageModel page;
 
-  const OnboardingPage({super.key, required this.page});
+  const _OnboardingPage({required this.page});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(40.0),
+      padding: const EdgeInsets.fromLTRB(18, 24, 18, 110),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          ClipRRect(
-            borderRadius: BorderRadius.circular(
-              80.0,
-            ), // Set your desired radius here
-          ),
-
-          // Placeholder for the illustration/image
-          // Use Image.asset(page.imageUrl) when you have the actual assets
-          Image.asset(page.imageUrl, height: 300),
-          const SizedBox(height: 50.0),
-          // Title
-          Text(
-            page.title,
-            style: const TextStyle(
-              fontSize: 28.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
+        children: [
+          Expanded(
+            flex: 6,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(28),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 20,
+                    offset: const Offset(0, 12),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(28),
+                child: Image.asset(
+                  page.imageUrl,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                ),
+              ),
             ),
           ),
-          const SizedBox(height: 15.0),
-          // Description
-          Text(
-            page.description,
-            style: TextStyle(fontSize: 16.0, color: Colors.grey.shade600),
+          const SizedBox(height: 20),
+          Expanded(
+            flex: 4,
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.fromLTRB(18, 20, 18, 18),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: const Color(0xFFE3EDF1)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    page.title,
+                    style: const TextStyle(
+                      fontSize: 26,
+                      height: 1.15,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF0B3C49),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    page.description,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      color: Color(0xFF4E6A73),
+                      height: 1.4,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
