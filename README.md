@@ -77,14 +77,6 @@ It is useful as both:
 
 ---
 
-## Animated Preview
-
-<p align="center">
-	<img src="https://media.giphy.com/media/26vUxJ9rqfwuIEkTu/giphy.gif" alt="Animated dating preview" width="420" />
-</p>
-
----
-
 ## Tech Stack
 
 - Flutter + Dart
