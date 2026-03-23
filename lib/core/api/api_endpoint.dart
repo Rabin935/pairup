@@ -5,29 +5,48 @@ import 'package:flutter/foundation.dart';
 class ApiEndpoints {
   ApiEndpoints._();
 
-  // Base URL (host + port only)
-  // For Android Emulator use: 'http://10.0.2.2:<port>'
-  // For Physical Device use your computer's IP: 'http://192.168.x.x:<port>'
+  // Optional overrides:
+  // --dart-define=API_BASE_URL=http://localhost:5000
+  // --dart-define=API_HOST=192.168.1.10
+  // --dart-define=API_PORT=5000
+  static const String _apiBaseUrlOverride = String.fromEnvironment(
+    'API_BASE_URL',
+  );
+  static const String _apiHostOverride = String.fromEnvironment('API_HOST');
+  static const String _apiPortOverride = String.fromEnvironment('API_PORT');
 
-  static const bool isPhysicalDevice = false;
+  static const int _defaultServerPort = 5000;
 
-  static const String comIpAddress = "192.168.18.155";
-  static const int serverPort = 5000;
+  static int get serverPort {
+    final parsed = int.tryParse(_apiPortOverride);
+    return parsed ?? _defaultServerPort;
+  }
 
   static String get baseUrl {
-    if (isPhysicalDevice) {
-      return 'http://$comIpAddress:$serverPort';
+    if (_apiBaseUrlOverride.isNotEmpty) {
+      return _apiBaseUrlOverride;
+    }
+
+    final host = _resolveHost();
+    return 'http://$host:$serverPort';
+  }
+
+  static String _resolveHost() {
+    if (_apiHostOverride.isNotEmpty) {
+      return _apiHostOverride;
     }
 
     if (kIsWeb) {
-      return 'http://localhost:$serverPort';
-    } else if (Platform.isAndroid) {
-      return 'http://10.0.2.2:$serverPort';
-    } else if (Platform.isIOS) {
-      return "http://localhost:$serverPort";
-    } else {
-      return "http://localhost:$serverPort";
+      return 'localhost';
     }
+
+    if (Platform.isAndroid) {
+      // Android emulator maps host machine localhost to 10.0.2.2.
+      return '10.0.2.2';
+    }
+
+    // iOS simulator + desktop platforms can use localhost directly.
+    return 'localhost';
   }
 
   static const connectionTimeout = Duration(seconds: 30);
