@@ -80,7 +80,7 @@ It is useful as both:
 ## Animated Preview
 
 <p align="center">
-	<img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3YzYXQ4emNnNHlzN2N4ZXJ0NnJuMmt3N3phb2x5cHlyd2Q5ZTRmNyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/QBd2kLB5qDmysEXre9/giphy.gif" alt="Animated app vibe" width="420" />
+	<img src="https://media.giphy.com/media/26vUxJ9rqfwuIEkTu/giphy.gif" alt="Animated dating preview" width="420" />
 </p>
 
 ---
